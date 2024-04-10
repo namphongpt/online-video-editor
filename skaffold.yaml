@@ -1,0 +1,22 @@
+apiVersion: skaffold/v3
+kind: Config
+metadata:
+  name: frontend
+build:
+  artifacts:
+    - image: 08svst/ove_frontend
+      context: front_end/
+#      sync:
+#        manual:
+#          - src: "src/**/*"
+#            dest: .
+      docker:
+        dockerfile: Dockerfile
+    - image: 08svst/ove_backend
+      context: back_end_api/
+      docker:
+        dockerfile: Dockerfile
+    - image: 08svst/ove_render_worker
+      context: video_render_worker/
+      docker:
+        dockerfile: Dockerfile
