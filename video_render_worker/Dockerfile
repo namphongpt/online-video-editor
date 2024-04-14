@@ -1,19 +1,14 @@
-FROM lukemathwalker/cargo-chef:latest as chef
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-FROM chef AS planner
-COPY ./Cargo.toml ./Cargo.lock ./
-COPY ./src ./src
-RUN cargo chef prepare
+COPY *.csproj ./
+RUN dotnet restore
 
-FROM chef AS builder
-COPY --from=planner /app/recipe.json .
-RUN cargo chef cook --release
 COPY . .
-RUN cargo build --release
-RUN mv ./target/release/video_render_worker ./app
+RUN dotnet publish -c Release -o out
 
-FROM debian:stable-slim AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
-COPY --from=builder /app/app /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/app"]
+COPY --from=build /app/out .
+
+ENTRYPOINT ["dotnet", "video_render_worker.dll"]

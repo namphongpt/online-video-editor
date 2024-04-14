@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
 //    let ignore = false;
 
-    fetch('/api/WeatherForecast').then(response => {
+    fetch('/api/Projects').then(response => {
       if (!response.ok) {
         throw new Error('Non-OK HTTP status');
       }
@@ -35,9 +35,9 @@ function App() {
   } else {
     return (
       <ul>
-        {results.map((result, index) => (
-          <li key={index}>
-            {result['date']} &mdash; {result['temperatureC']} &#x2103; &mdash; {result['summary']}
+        {results.map(result => (
+          <li key={result['id']}>
+            {result['title']}
           </li>
         ))}
       </ul>

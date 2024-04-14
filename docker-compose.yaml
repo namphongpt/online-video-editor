@@ -1,0 +1,64 @@
+services:
+  postgresql:
+    image: postgres
+    container_name: projects-pgsql
+    restart: always
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpass
+      POSTGRES_DB: Projects
+    ports:
+      - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbituser
+      RABBITMQ_DEFAULT_PASS: rabbitpass
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  renderworker:
+    build:
+      context: ./video_render_worker
+    container_name: renderworker
+    restart: always
+    environment:
+      RABBITMQ_USERNAME: rabbituser
+      RABBITMQ_PASSWORD: rabbitpass
+    depends_on:
+      - postgresql
+      - rabbitmq
+
+  projects_api:
+    build:
+      context: ./ProjectsApi
+      args:
+        - BUILD_CONFIGURATION=Debug
+    container_name: projects-api
+    restart: always
+    environment:
+      RABBITMQ_USERNAME: rabbituser
+      RABBITMQ_PASSWORD: rabbitpass
+      DB_HOST: projects-pgsql
+      DB_USER: dbuser
+      DB_PASSWORD: dbpass
+      DB_NAME: Projects
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+      - rabbitmq
+
+  frontend:
+    build:
+      context: ./front_end
+    container_name: frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - projects_api

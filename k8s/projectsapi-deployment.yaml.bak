@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend
+  name: projects-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend
+      app: projects-api
   template:
     metadata:
       labels:
-        app: backend
+        app: projects-api
     spec:
       containers:
-        - name: backend
+        - name: projects-api
           image: 08svst/ove_backend
           ports:
           - containerPort: 8080
@@ -28,16 +28,18 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-credentials
                   key: password
+          envFrom:
+            - secretRef:
+                name: postgres-secret
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: projects-api
 spec:
   selector:
-    app: backend
+    app: projects-api
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
-#  type: LoadBalancer

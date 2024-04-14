@@ -13,7 +13,7 @@ build:
       docker:
         dockerfile: Dockerfile
     - image: 08svst/ove_backend
-      context: back_end_api/
+      context: ProjectsApi/
       docker:
         dockerfile: Dockerfile
     - image: 08svst/ove_render_worker

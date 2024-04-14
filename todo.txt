@@ -1,0 +1,9 @@
+[x] architecture diagram uitwerken (waaronder managed postgres nu op azure)
+[ ] toelichting toeveogen aan architecture diagram
+[ ] research uitwerken
+[ ] MediaService toevoegen
+[ ] K8S Api Gateway voor /api/projects/ en /api/media/
+
+voor volgende sprint:
+- daadwerkelijk op azure
+- ci/cd pipeline opzetten
