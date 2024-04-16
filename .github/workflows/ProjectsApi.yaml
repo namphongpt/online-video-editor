@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - front_end/**
+      - ProjectsApi/**
 
 env:
   AZURE_CONTAINER_REGISTRY: "onlinevideoeditor"
