@@ -10,7 +10,7 @@ on:
 env:
   AZURE_CONTAINER_REGISTRY: "onlinevideoeditor"
   CONTAINER_NAME: "ProjectsApi"
-  RESOURCE_GROUP: "online-video-editor"
+  RESOURCE_GROUP: "onlinevideoeditor"
 #  CLUSTER_NAME: ""
 #  DEPLOYMENT_MANIFEST_PATH: "your-deployment-manifest-path"
 
