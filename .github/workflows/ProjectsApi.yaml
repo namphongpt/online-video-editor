@@ -16,9 +16,9 @@ env:
 
 jobs:
   release:
-#    permissions:
-#      contents: read
-#      id-token: write
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
