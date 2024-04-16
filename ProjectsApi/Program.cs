@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c => { c.AddServer(new OpenApiServer { Url = "/api"}); });
 Console.WriteLine("Password: " + Environment.GetEnvironmentVariable("DB_PASSWORD"));
+
 builder.Services.AddDbContext<ProjectsContext>(opt =>
     opt.UseNpgsql(
         new NpgsqlConnectionStringBuilder()
