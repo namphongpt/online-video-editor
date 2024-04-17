@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projects-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: projects-api
+  template:
+    metadata:
+      labels:
+        app: projects-api
+    spec:
+      containers:
+        - name: projects-api
+          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi-893d1e40432aed6bbb206069a91efdc00b3a1bd6
+          ports:
+          - containerPort: 8080
+#          env:
+#            - name: RABBITMQ_USERNAME
+#              valueFrom:
+#                secretKeyRef:
+#                  name: rabbitmq-credentials
+#                  key: username
+#            - name: RABBITMQ_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: rabbitmq-credentials
+#                  key: password
+          env:
+            - name: DB_HOST
+              value: ProjectsApi
+            - name: DB_USER
+              value: dbadmin
+            - name: DB_PASSWORD
+              value: dbpassword123!
+#              valueFrom:
+#                secretKeyRef:
+#                  name: secret-keys
+#                  key: projectsapi-database-password
+            - name: DB_NAME
+              value: projectsapi
+#          volumeMounts:
+#            - name: secret-keys
+#              mountPath: /mnt/csi/secret-keys
+#              readOnly: true
+#      volumes:
+#        - name: secret-keys
+#          csi:
+#            driver: secrets-store.csi.x-k8s.io
+#            readOnly: true
+#            volumeAttributes:
+#              secretProviderClass: azure-kvname-wi
+#            nodePublishSecretRef:
+#              name: 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: projects-api
+spec:
+  selector:
+    app: projects-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
