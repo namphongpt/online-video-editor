@@ -35,6 +35,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
+          context: "{{defaultContext}}:projectsApi"
           tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}-${{ github.sha }}
           file: ProjectsApi/Dockerfile
 

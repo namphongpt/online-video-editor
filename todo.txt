@@ -7,3 +7,8 @@
 voor volgende sprint:
 - daadwerkelijk op azure
 - ci/cd pipeline opzetten
+
+
+
+--
+- Docker Compose (dev en prod) opgezet voor groepsproject
