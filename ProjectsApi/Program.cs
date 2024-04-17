@@ -38,6 +38,7 @@ builder.Services.AddControllers();
 //    UserName = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME"),
 //    Password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD")
 //};
+
 //using var connection = factory.CreateConnection();
 //using var channel = connection.CreateModel();
 
