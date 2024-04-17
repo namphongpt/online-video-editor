@@ -1,6 +1,5 @@
 using System.Text;
 using RabbitMQ.Client;
-using System;
 using ProjectsApi.Models;
 using Microsoft.EntityFrameworkCore;
 using ProjectsApi.Services;
