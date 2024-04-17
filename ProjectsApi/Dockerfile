@@ -7,8 +7,8 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Install dotnet-ef so we can generate a migration bundle.
-RUN dotnet tool install --global dotnet-ef
 ENV PATH $PATH:/root/.dotnet/tools
+RUN dotnet tool install --global dotnet-ef
 
 COPY ./ProjectsApi.csproj .
 RUN dotnet restore ./ProjectsApi.csproj
