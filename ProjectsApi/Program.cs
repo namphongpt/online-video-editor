@@ -27,7 +27,6 @@ builder.Services.AddDbContext<ProjectsContext>(opt =>
             Password = Environment.GetEnvironmentVariable("DB_PASSWORD")
         }.ConnectionString
     )
-        
 //        $"Host={Environment.GetEnvironmentVariable("DB_HOST")};Username={Environment.GetEnvironmentVariable("DB_USER")};Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};Database={Environment.GetEnvironmentVariable("DB_NAME")}")
 );
 builder.Services.AddScoped<IProjectService, ProjectService>();
