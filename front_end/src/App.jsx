@@ -10,6 +10,7 @@ function App() {
   useEffect(() => {
 //    let ignore = false;
 
+
     fetch('/api/Projects').then(response => {
       if (!response.ok) {
         throw new Error('Non-OK HTTP status');
