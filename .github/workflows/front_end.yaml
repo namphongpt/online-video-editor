@@ -32,5 +32,5 @@ jobs:
         with:
           push: true
           context: ./${{ env.SERVICE_NAME }}
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.SERVICE_NAME }}-${{ github.sha }}
+          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.SERVICE_NAME }}
           file: ${{ env.SERVICE_NAME }}/Dockerfile
