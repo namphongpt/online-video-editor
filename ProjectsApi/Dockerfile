@@ -1,19 +1,28 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
 
-COPY *.csproj ./
-RUN dotnet restore
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
 
+# Install dotnet-ef so we can generate a migration bundle.
 RUN dotnet tool install --global dotnet-ef
 ENV PATH $PATH:/root/.dotnet/tools
 
+COPY ./ProjectsApi.csproj .
+RUN dotnet restore ./ProjectsApi.csproj
+
 COPY . .
-RUN dotnet ef migrations bundle -o efbundle
-RUN dotnet publish -c ${BUILD_CONFIGURATION} -o out
+RUN dotnet ef migrations bundle -o /app/efbundle
+RUN dotnet build ./ProjectsApi.csproj -c $BUILD_CONFIGURATION -o /app/build
 
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish ./ProjectsApi.csproj -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app/out /app/efbundle .
-
+COPY --from=build /app/efbundle .
+COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "ProjectsApi.dll"]
