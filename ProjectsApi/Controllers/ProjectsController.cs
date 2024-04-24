@@ -46,4 +46,18 @@ public class ProjectsController : ControllerBase
             project
         );
     }
+
+    [HttpPost("{id}/render")]
+    public async Task<ActionResult> RenderProject(Guid id)
+    {
+        Project? project = await _projectService.GetProjectAsync(id);
+        if (project is null)
+        {
+            return NotFound();
+        }
+
+        await _projectService.RequestRender(project);
+
+        return Ok();
+    }
 }

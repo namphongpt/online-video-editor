@@ -3,9 +3,10 @@ using ProjectsApi.Models;
 
 namespace ProjectsApi.Services;
 
-public class ProjectService(ProjectsContext projectsContext) : IProjectService
+public class ProjectService(ProjectsContext projectsContext, IMessageService messageService) : IProjectService
 {
-    private ProjectsContext _context = projectsContext;
+    private readonly ProjectsContext _context = projectsContext;
+    private readonly IMessageService _messageService = messageService;
 
     public async Task<Project?> GetProjectAsync(Guid id)
     {
@@ -22,5 +23,13 @@ public class ProjectService(ProjectsContext projectsContext) : IProjectService
         await _context.Projects.AddAsync(project);
         await _context.SaveChangesAsync();
         return project;
+    }
+
+    public async Task RequestRender(Project project)
+    {
+        await _messageService.SendMessageAsync(
+            "video-render-queue",
+            project.Id.ToString()
+        );
     }
 }

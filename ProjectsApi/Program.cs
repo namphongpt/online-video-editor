@@ -6,6 +6,8 @@ using ProjectsApi.Services;
 using Microsoft.Data.SqlClient;
 using Npgsql;
 using Microsoft.OpenApi.Models;
+using Azure.Messaging.ServiceBus;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,10 +29,17 @@ builder.Services.AddDbContext<ProjectsContext>(opt =>
             Password = Environment.GetEnvironmentVariable("DB_PASSWORD")
         }.ConnectionString
     )
-
-//        $"Host={Environment.GetEnvironmentVariable("DB_HOST")};Username={Environment.GetEnvironmentVariable("DB_USER")};Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};Database={Environment.GetEnvironmentVariable("DB_NAME")}")
+// TODO: MassTransit gebruiken zodat je voor local rabbitmq kan gebruiken
+// TODO: migrations toevoegen aan CI/CD
+// TODO: docker compose updaten adhv die van groep
+// TODO: secrets doen via azure
 );
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddSingleton<IMessageService>(sp =>
+    new AzureServiceBusService(
+        Environment.GetEnvironmentVariable("AZURE_SERVICE_BUS_CONN_STR")!
+    )
+);
 builder.Services.AddControllers();
 
 //var factory = new ConnectionFactory {

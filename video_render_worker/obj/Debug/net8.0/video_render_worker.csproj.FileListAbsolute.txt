@@ -1,6 +1,0 @@
-/home/main/school/s7-services/video_render_worker/obj/Debug/net8.0/video_render_worker.csproj.AssemblyReference.cache
-/home/main/school/s7-services/video_render_worker/obj/Debug/net8.0/video_render_worker.GeneratedMSBuildEditorConfig.editorconfig
-/home/main/school/s7-services/video_render_worker/obj/Debug/net8.0/video_render_worker.AssemblyInfoInputs.cache
-/home/main/school/s7-services/video_render_worker/obj/Debug/net8.0/video_render_worker.AssemblyInfo.cs
-/home/main/school/s7-services/video_render_worker/obj/Debug/net8.0/video_render_worker.csproj.CoreCompileInputs.cache
-/home/main/school/s7-services/video_render_worker/obj/Debug/net8.0/video_render_worker.sourcelink.json

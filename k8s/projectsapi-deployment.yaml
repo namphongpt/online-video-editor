@@ -17,7 +17,7 @@ spec:
           image: onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi-893d1e40432aed6bbb206069a91efdc00b3a1bd6
           ports:
           - containerPort: 8080
-#          env:
+          env:
 #            - name: RABBITMQ_USERNAME
 #              valueFrom:
 #                secretKeyRef:
@@ -28,19 +28,44 @@ spec:
 #                secretKeyRef:
 #                  name: rabbitmq-credentials
 #                  key: password
-          env:
             - name: DB_HOST
-              value: ProjectsApi
+              valueFrom:
+                secretKeyRef:
+                  name: projectsapi-database-credentials
+                  key: host
             - name: DB_USER
-              value: dbadmin
+              valueFrom:
+                secretKeyRef:
+                  name: projectsapi-database-credentials
+                  key: username
             - name: DB_PASSWORD
-              value: dbpassword123!
-#              valueFrom:
-#                secretKeyRef:
-#                  name: secret-keys
-#                  key: projectsapi-database-password
+              valueFrom:
+                secretKeyRef:
+                  name: projectsapi-database-credentials
+                  key: password
             - name: DB_NAME
-              value: projectsapi
+              valueFrom:
+                secretKeyRef:
+                  name: projectsapi-database-credentials
+                  key: database
+            - name: AZURE_SERVICE_BUS_CONN_STR
+              valueFrom:
+                secretKeyRef:
+                  name: service-bus-credentials
+                  key: connection_string
+#          env:
+#            - name: DB_HOST
+#              value: projectsapi-database.postgres.database.azure.com
+#            - name: DB_USER
+#              value: dbadmin
+#            - name: DB_PASSWORD
+#              value: dbpassword123!
+##              valueFrom:
+##                secretKeyRef:
+##                  name: secret-keys
+##                  key: projectsapi-database-password
+#            - name: DB_NAME
+#              value: projects
 #          volumeMounts:
 #            - name: secret-keys
 #              mountPath: /mnt/csi/secret-keys

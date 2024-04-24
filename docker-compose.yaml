@@ -10,28 +10,36 @@ services:
     ports:
       - "5432:5432"
 
-  rabbitmq:
-    image: rabbitmq
-    container_name: rabbitmq
-    restart: always
-    environment:
-      RABBITMQ_DEFAULT_USER: rabbituser
-      RABBITMQ_DEFAULT_PASS: rabbitpass
-    ports:
-      - "5672:5672"
-      - "15672:15672"
+#  azurite:
+#    image: mcr.microsoft.com/azure-storage/azurite
+#    command: "azurite --loose --queueHost 0.0.0.0 --queuePort 10001"
+#    container_name: azurite
+#    restart: always
+#    ports:
+#      - 10001:10001
 
-  renderworker:
-    build:
-      context: ./video_render_worker
-    container_name: renderworker
-    restart: always
-    environment:
-      RABBITMQ_USERNAME: rabbituser
-      RABBITMQ_PASSWORD: rabbitpass
-    depends_on:
-      - postgresql
-      - rabbitmq
+#  rabbitmq:
+#    image: rabbitmq
+#    container_name: rabbitmq
+#    restart: always
+#    environment:
+#      RABBITMQ_DEFAULT_USER: rabbituser
+#      RABBITMQ_DEFAULT_PASS: rabbitpass
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#
+#  renderworker:
+#    build:
+#      context: ./video_render_worker
+#    container_name: renderworker
+#    restart: always
+#    environment:
+#      RABBITMQ_USERNAME: rabbituser
+#      RABBITMQ_PASSWORD: rabbitpass
+#    depends_on:
+#      - postgresql
+#      - rabbitmq
 
   projects_api:
     build:
@@ -47,11 +55,14 @@ services:
       DB_USER: dbuser
       DB_PASSWORD: dbpass
       DB_NAME: Projects
+      AZURE_SERVICE_BUS_CONN_STR: Endpoint=sb://onlinevideoeditor-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=E73LCgSPtDMXIDzhuUNI3dQQxof2bq4FD+ASbEOLImY=
+      #"DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;QueueEndpoint=http://127.0.0.1:10001/devstoreaccount1;"
     ports:
       - "8080:8080"
     depends_on:
       - postgresql
-      - rabbitmq
+#      - azurite
+#      - rabbitmq
 
   frontend:
     build:
