@@ -12,9 +12,15 @@ export type RouterMetaType = {
 };
 
 const routerMeta: RouterMetaType = {
-    HomePage: {
-        name: 'Home',
+    ProjectsOverviewPage: {
+        name: 'ProjectsOverviewPage',
         path: '/',
+        isShow: true,
+        isCommon: true
+    },
+    ProjectPage: {
+        name: 'ProjectPage',
+        path: '/project/:id',
         isShow: true,
         isCommon: true
     }

@@ -1,12 +1,14 @@
 import { ProjectInterface } from '@/interfaces/project'
-import { projectParam } from './projectRepository.param'
+import { CreateProjectParam } from './projectRepository.param'
 import axios from 'axios'
 
-export const getProject = async ({ id }: projectParam) => {
-    return await fetch(
-        `/api/Projects/${id}`
-    )
-}
+type Projects = ReadonlyArray<ProjectInterface>
 
-export const getProjects = (): Promise<ProjectInterface[]> =>
-    axios.get('/api/Projects').then((res) => res.data)
+export const fetchProject = (id: string): Promise<ProjectInterface> =>
+    axios.get(`/api/Projects/${id}`).then(res => res.data)
+
+export const fetchProjects = (): Promise<Projects> =>
+    axios.get('/api/Projects').then(res => res.data)
+
+export const createProject = ({ title }: CreateProjectParam): Promise<ProjectInterface> =>
+    axios.post('/api/Projects', { title }).then(res => res.data)

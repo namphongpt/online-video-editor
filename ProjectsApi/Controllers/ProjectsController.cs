@@ -19,6 +19,7 @@ public class ProjectsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
     {
+        System.Threading.Thread.Sleep(2000);
         return Ok(await _projectService.GetProjectsAsync());
     }
 

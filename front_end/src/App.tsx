@@ -1,13 +1,15 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Suspense } from 'react';
+import './global.css';
 import Router from './Router'
+import Layout from './components/Layout';
 //import UserContextProvider from '@/contexts/UserContextProvider'
 
 function App() {
   return (
     <div className="App">
-      <Router />
+      <Suspense fallback={<Layout />}>
+        <Router />
+      </Suspense>
     </div>
   );
 }

@@ -29,9 +29,8 @@ const Router = () => {
           <Route
             key={props.path}
             path={props.path}
-            element={
-                <Component />
-                /*
+            element={<Component />
+            /*
               <ProtectedRoute path={props.path}>
                 <Suspense fallback={<LoadingFallback />}>
                   <ErrorBoundary
@@ -44,8 +43,7 @@ const Router = () => {
                   </ErrorBoundary>
                 </Suspense>
               </ProtectedRoute>
-              */
-            }
+              */}
           />
         ))}
       </Route>

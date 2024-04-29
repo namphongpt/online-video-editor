@@ -1,3 +1,3 @@
-export interface projectParam {
-    id: string;
+export interface CreateProjectParam {
+    title: string;
 }
