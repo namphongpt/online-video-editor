@@ -26,12 +26,10 @@ export interface Clip {
 
 interface VideoTimelineProps {
     children: React.ReactNode;
+    lengthMs: number;
 };
 
-const VideoTimeline = ({ children }: VideoTimelineProps): JSX.Element => {
-    // TODO: vervangen met statemanager iets
-    //const [clips, setClips] = useState(clips_org);
-    const maxClipEndMs = 20_000;//Math.max(...clips.map(c => c.endTimeMs));
+const VideoTimeline = ({ children, lengthMs }: VideoTimelineProps): JSX.Element => {
     const msPerScreenWidth = 20_000;
 
     const { setNodeRef } = useDroppable({ id: 'timeline' });
@@ -55,7 +53,7 @@ const VideoTimeline = ({ children }: VideoTimelineProps): JSX.Element => {
                 <ScrollArea className='w-full relative whitespace-nowrap'>
                     <div className='h-32 w-full relative flex flex-col gap-2 divide-y'>
                         <VideoTimelineTimecodeBar
-                            totalDurationMs={maxClipEndMs}
+                            totalDurationMs={lengthMs}
                             msPerScreenWidth={msPerScreenWidth}
                         />
 

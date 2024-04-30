@@ -3,21 +3,18 @@ import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } 
 
 interface TimelineClipProps {
     clip: Clip;
-    endTimeMs?: number;
-    isHovering?: boolean;
+    timelineLengthMs: number;
 };
 
-const TimelineClip = ({ clip }: TimelineClipProps): JSX.Element => {
-    const endTimeMs = 20_000; // TODO: change
-
+const TimelineClip = ({ clip, timelineLengthMs }: TimelineClipProps): JSX.Element => {
     return (
         <ContextMenu>
             <ContextMenuTrigger>
                 <div
                     key={clip.mediaAsset.filename}
                     style={{
-                        transform: `translateX(${clip.startTimeMs / endTimeMs * 100}cqw)`,
-                        width: `${(clip.offsetEndMs - clip.offsetStartMs) / endTimeMs * 100}%`
+                        transform: `translateX(${clip.startTimeMs / timelineLengthMs * 100}cqw)`,
+                        width: `${(clip.offsetEndMs - clip.offsetStartMs) / timelineLengthMs * 100}%`
                     }}
                     className='h-24 bg-primary rounded-md cursor-grab absolute shrink-0'
                 />

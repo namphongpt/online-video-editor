@@ -1,113 +1,134 @@
-import Layout from "@/components/Layout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useGetProjectQuery } from "@/queries/projects.query";
-import { useParams } from "react-router-dom";
-import VideoTimeline, { Clip } from "./ProjectPage/VideoTimeline";
-import { useCallback, useState } from "react";
-import MediaAssetItem from "./ProjectPage/MediaAssetItem";
-import { DndContext, DragEndEvent, DragMoveEvent, DragOverEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core";
-import { createSnapModifier, snapCenterToCursor } from "@dnd-kit/modifiers";
-import { MediaAsset } from "@/interfaces/mediaAsset";
-import TimelineClip from "./ProjectPage/TimelineClip";
+import Layout from '@/components/Layout';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useGetProjectQuery } from '@/queries/projects.query';
+import { useParams } from 'react-router-dom';
+import VideoTimeline, { Clip } from './ProjectPage/VideoTimeline';
+import { useCallback, useState } from 'react';
+import MediaAssetItem from './ProjectPage/MediaAssetItem';
+import { DndContext, DragCancelEvent, DragEndEvent, DragMoveEvent } from '@dnd-kit/core';
+import { MediaAsset } from '@/interfaces/mediaAsset';
+import TimelineClip from './ProjectPage/TimelineClip';
+import { snapCenterToCursor } from '@dnd-kit/modifiers';
 
-export type DragState = false | 'outside' | 'inside' | 'disallowed';
+export type DragState = false | 'outside' | 'inside';
 
 const ProjectPage = (): JSX.Element => {
     const { id } = useParams();
     const { data: project } = useGetProjectQuery(id!);
 
-    const [clips, setClips] = useState<Clip[]>([]);
-
-    const [draggingItem, setDraggingItem] = useState<Clip | null>(null);
-
+    const [ clips, setClips ] = useState<Clip[]>([]);
+    const [ draggingItem, setDraggingItem ] = useState<Clip | null>(null);
     const [ dragState, setDragState ] = useState<DragState>(false);
 
-    const handleDragStart = useCallback((event: DragStartEvent) => {
-      // This requires casting as this is still a generic `AnyData`, as
-      // mentioned in this issue: https://github.com/clauderic/dnd-kit/issues/935.
-      if (event.active.data.current === undefined) return;
-
-      setDragState('outside');
-    }, [dragState]);
+    const timelineLengthMs = Math.max(
+        60_000, // Default of 1 minute if no clips are present.
+        ...clips.map(x => x.startTimeMs + x.offsetEndMs)
+    );
 
     const handleDragMove = useCallback((event: DragMoveEvent) => {
-      // `onDragOver` is not used because this doesn't have a counterpart which
-      // notifies us when it has left the droppable area.
-      if (event.over !== null) {
-        setDragState('inside');
-      }
-      if (dragState !== 'inside') return;
+        // `onDragOver` is not used because this doesn't have a counterpart
+        // which notifies us when it has left the droppable area.
 
-      if (event.over === null) {
-        setDragState('outside');
-        return;
-      }
+        const { delta, active, over } = event;
 
-      const { delta, active, over } = event;
+        if (over !== null && over.id === 'timeline') {
+            setDragState('inside');
+        } else {
+            setDragState('outside');
+            return;
+        }
 
-      const timelineWidth = over!.rect.width;
+        // It's not clear when there wouldn't be a `initial`, but we'll just
+        // ignore this event if we encounter such case.
+        if (active.rect.current.initial === null) {
+            return;
+        }
 
-      const cardOffset = active.rect.current.initial!.left - over!.rect.left;
+        const timelineWidth = over.rect.width;
 
-      const mediaAsset = active.data.current as MediaAsset;
-      setDraggingItem({
-        mediaAsset: mediaAsset,
-        startTimeMs: Math.max(delta.x + cardOffset, 0) / timelineWidth * 20_000,
-        offsetStartMs: 0,
-        offsetEndMs: mediaAsset.durationMs
-      });
-    }, [dragState]);
+        // While `delta.x` gives us the difference in the X coordinate, we must
+        // account for the starting position (of `active`) w.r.t. the start of
+        // the timeline (`over`), in order to find the position on the timeline
+        // `delta.x + cardOffsetX`.
+        const cardOffsetX = active.rect.current.initial.left - over.rect.left;
+
+        // dnd-kit doesn't offer a way of typing the data, so we have to assume
+        // it is correct.
+        const mediaAsset = active.data.current as MediaAsset;
+
+        setDraggingItem({
+          mediaAsset: mediaAsset,
+          startTimeMs: Math.max(delta.x + cardOffsetX, 0) / timelineWidth * timelineLengthMs,
+          offsetStartMs: 0,
+          offsetEndMs: mediaAsset.durationMs
+        });
+    }, [dragState, timelineLengthMs]);
 
     const handleDragEnd = useCallback((event: DragEndEvent) => {
-      const { active, over } = event;
-      if (over === null) return;
+        if (event.over?.id !== 'timeline') return;
+        if (draggingItem === null) return;
 
-      // TODO: draggingItem! null check
-      setClips([...clips, draggingItem!])
+        setClips([...clips, draggingItem]);
+
+        setDragState(false);
+        setDraggingItem(null);
     }, [draggingItem]);
 
+    const handleDragCancel = useCallback((_event: DragCancelEvent) => {
+        setDragState(false);
+        setDraggingItem(null);
+    }, []);
+
+    // TODO: als je een clip hebt van 2s op n 60s timeline, dan zit de timelineclip niet onder je cursor
     return (
         <Layout>
-            <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-5xl">
+            <h1 className='scroll-m-20 text-4xl font-extrabold tracking-tight'>
               Project &lsquo;{project.title}&rsquo;
             </h1>
     
-      <DndContext
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-        onDragMove={handleDragMove}
-        onDragCancel={() => alert(1)} /* TODO */
-        modifiers={[/*snapCenterToCursor, createSnapModifier(20)*/]}
-      >
-      <Card>
-        <CardHeader>
-          <CardTitle>Mediabestanden</CardTitle>
-          <CardDescription>
-            Gebruik je mediabestanden in je project door ze naar de tijdlijn
-            te verschuiven.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-row gap-2">
-          <MediaAssetItem
-            mediaAsset={{filename: 'video.webm', durationMs: 7000}}
-            dragState={dragState}
-          />
-          <MediaAssetItem
-            mediaAsset={{filename: 'video2.webm', durationMs: 2000}}
-            dragState={dragState}
-          />
-        </CardContent>
-      </Card>
+            <DndContext
+                onDragEnd={handleDragEnd}
+                onDragMove={handleDragMove}
+                onDragCancel={handleDragCancel}
+            >
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Mediabestanden</CardTitle>
+                        <CardDescription>
+                            Gebruik je mediabestanden in je project door ze
+                            naar de tijdlijn te verschuiven.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className='flex flex-row gap-2'>
+                        <MediaAssetItem
+                            mediaAsset={{filename: 'video.webm', durationMs: 7000}}
+                            dragState={dragState}
+                        />
+                        <MediaAssetItem
+                            mediaAsset={{filename: 'video2.webm', durationMs: 2000}}
+                            dragState={dragState}
+                        />
+                    </CardContent>
+                </Card>
 
-      <VideoTimeline>
-        {clips.map(clip => (
-          <TimelineClip key={clip.mediaAsset.filename} clip={clip} />
-        ))}
-        {dragState === 'inside' && draggingItem !== null && <TimelineClip clip={draggingItem} />}
-      </VideoTimeline>
-      </DndContext>
+                <VideoTimeline lengthMs={timelineLengthMs}>
+                    {clips.map(clip => (
+                        <TimelineClip
+                            key={clip.mediaAsset.filename}
+                            clip={clip}
+                            timelineLengthMs={timelineLengthMs}
+                        />
+                    ))}
+                    {
+                        dragState === 'inside' &&
+                        draggingItem !== null &&
+                        <TimelineClip
+                            clip={draggingItem}
+                            timelineLengthMs={timelineLengthMs}
+                        />
+                    }
+                </VideoTimeline>
+            </DndContext>
         </Layout>
     )
 };
