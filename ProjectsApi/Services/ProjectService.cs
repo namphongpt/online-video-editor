@@ -10,7 +10,9 @@ public class ProjectService(ProjectsContext projectsContext, IMessageService mes
 
     public async Task<Project?> GetProjectAsync(Guid id)
     {
-        return await _context.Projects.FirstOrDefaultAsync(p => p.Id == id);
+        return await _context.Projects
+                             //.Include(p => p.Clips)
+                             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<IEnumerable<Project>> GetProjectsAsync()

@@ -8,15 +8,23 @@ import MediaAssetItem from './ProjectPage/MediaAssetItem';
 import { DndContext, DragCancelEvent, DragEndEvent, DragMoveEvent } from '@dnd-kit/core';
 import { MediaAsset } from '@/interfaces/mediaAsset';
 import TimelineClip from './ProjectPage/TimelineClip';
-import { snapCenterToCursor } from '@dnd-kit/modifiers';
+import { useAddClipQuery, useGetProjectClipsQuery } from '@/queries/clips.query';
+import { createClip } from '@/repositories/clips/clipRepository';
+import { toast } from '@/components/ui/use-toast';
 
 export type DragState = false | 'outside' | 'inside';
 
 const ProjectPage = (): JSX.Element => {
     const { id } = useParams();
     const { data: project } = useGetProjectQuery(id!);
+    const { data: clipsData } = useGetProjectClipsQuery(id!);
+    const addClip = useAddClipQuery(id!);
 
-    const [ clips, setClips ] = useState<Clip[]>([]);
+    const [ clips, setClips ] = useState<Clip[]>(
+        clipsData.map(clip => {
+            return {...clip, mediaAsset: {filename: "aa.mp3", durationMs: 2000}};
+        })
+    );
     const [ draggingItem, setDraggingItem ] = useState<Clip | null>(null);
     const [ dragState, setDragState ] = useState<DragState>(false);
 
@@ -68,7 +76,19 @@ const ProjectPage = (): JSX.Element => {
         if (event.over?.id !== 'timeline') return;
         if (draggingItem === null) return;
 
-        setClips([...clips, draggingItem]);
+        addClip.mutate(
+            {...draggingItem, mediaAssetId: '7851beeb-6fd9-4769-9252-e5f5edf5c27f'},
+            {
+                onError: (err) => {
+                    toast({
+                        title: 'Kon clip niet aanmaken',
+                        description: err.message,
+                        variant: 'destructive'
+                    });
+                }
+            }
+        );
+        //setClips([...clips, draggingItem]);
 
         setDragState(false);
         setDraggingItem(null);

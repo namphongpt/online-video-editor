@@ -19,7 +19,6 @@ public class ProjectsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
     {
-        System.Threading.Thread.Sleep(2000);
         return Ok(await _projectService.GetProjectsAsync());
     }
 
@@ -37,6 +36,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
+    // TODO: hier ook een DTO gebruiken want Clips is niet included
     [HttpPost]
     public async Task<ActionResult<Project>> PostProject(Project project)
     {

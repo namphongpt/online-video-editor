@@ -10,4 +10,5 @@ public class ProjectsContext : DbContext
     public ProjectsContext() {}
 
     public DbSet<Project> Projects { get; set; } = null!;
+    public DbSet<Clip> Clips { get; set; } = null!;
 }
