@@ -6,23 +6,23 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { MoveHorizontal, Scissors } from 'lucide-react';
 import VideoTimelineTimecodeBar from './VideoTimelineTimecodeBar';
 
-export interface Clip {
-    mediaAsset: MediaAsset;
-    /** At what ms the {@link MediaAsset} should start playing. Starts at the
-      * beginning of the original {@link MediaAsset} when set to `0`.
-      */
-    offsetStartMs: number;
-    /**
-     * Until what ms the {@link MediaAsset} should keep playing. This clip will
-     * play to the end of the {@link MediaAsset} when it is equal to its
-     * `durationMs` field.
-     */
-    offsetEndMs: number;
-    /**
-     * At what time in the final video this `Clip` should be played.
-     */
-    startTimeMs: number;
-};
+//export interface Clip {
+//    mediaAsset: MediaAsset;
+//    /** At what ms the {@link MediaAsset} should start playing. Starts at the
+//      * beginning of the original {@link MediaAsset} when set to `0`.
+//      */
+//    offsetStartMs: number;
+//    /**
+//     * Until what ms the {@link MediaAsset} should keep playing. This clip will
+//     * play to the end of the {@link MediaAsset} when it is equal to its
+//     * `durationMs` field.
+//     */
+//    offsetEndMs: number;
+//    /**
+//     * At what time in the final video this `Clip` should be played.
+//     */
+//    startTimeMs: number;
+//};
 
 interface VideoTimelineProps {
     children: React.ReactNode;

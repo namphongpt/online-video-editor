@@ -2,31 +2,33 @@ import Layout from '@/components/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useGetProjectQuery } from '@/queries/projects.query';
 import { useParams } from 'react-router-dom';
-import VideoTimeline, { Clip } from './ProjectPage/VideoTimeline';
+import VideoTimeline from './ProjectPage/VideoTimeline';
 import { useCallback, useState } from 'react';
 import MediaAssetItem from './ProjectPage/MediaAssetItem';
 import { DndContext, DragCancelEvent, DragEndEvent, DragMoveEvent } from '@dnd-kit/core';
 import { MediaAsset } from '@/interfaces/mediaAsset';
 import TimelineClip from './ProjectPage/TimelineClip';
 import { useAddClipQuery, useGetProjectClipsQuery } from '@/queries/clips.query';
-import { createClip } from '@/repositories/clips/clipRepository';
 import { toast } from '@/components/ui/use-toast';
+import { ClipCreateDto } from '@/interfaces/clip';
 
 export type DragState = false | 'outside' | 'inside';
 
 const ProjectPage = (): JSX.Element => {
     const { id } = useParams();
     const { data: project } = useGetProjectQuery(id!);
-    const { data: clipsData } = useGetProjectClipsQuery(id!);
+    const { data: clips } = useGetProjectClipsQuery(id!);
     const addClip = useAddClipQuery(id!);
 
-    const [ clips, setClips ] = useState<Clip[]>(
-        clipsData.map(clip => {
-            return {...clip, mediaAsset: {filename: "aa.mp3", durationMs: 2000}};
-        })
-    );
-    const [ draggingItem, setDraggingItem ] = useState<Clip | null>(null);
+    const [ draggingItem, setDraggingItem ] = useState<ClipCreateDto | null>(null);
     const [ dragState, setDragState ] = useState<DragState>(false);
+    // TODO: populate after API call:
+    const mediaAssetsById: Record<string, {id: string; filename: string; durationMs: number;}> = {
+        'b99a5d95-f543-4f96-853a-725766ab75b1': {id: 'b99a5d95-f543-4f96-853a-725766ab75b1', filename: 'lol.mp4', durationMs: 6000}
+    };
+    const clipsWithMedia = clips.map(clip => (
+        {...clip, mediaAsset: mediaAssetsById[clip.id]}
+    ));
 
     const timelineLengthMs = Math.max(
         60_000, // Default of 1 minute if no clips are present.
@@ -65,19 +67,21 @@ const ProjectPage = (): JSX.Element => {
         const mediaAsset = active.data.current as MediaAsset;
 
         setDraggingItem({
-          mediaAsset: mediaAsset,
-          startTimeMs: Math.max(delta.x + cardOffsetX, 0) / timelineWidth * timelineLengthMs,
-          offsetStartMs: 0,
-          offsetEndMs: mediaAsset.durationMs
+            mediaAssetId: mediaAsset.id,
+            projectId: id!,
+            mediaAsset: mediaAsset,
+            startTimeMs: Math.max(delta.x + cardOffsetX, 0) / timelineWidth * timelineLengthMs,
+            offsetStartMs: 0,
+            offsetEndMs: mediaAsset.durationMs
         });
-    }, [dragState, timelineLengthMs]);
+    }, [draggingItem, dragState, timelineLengthMs]);
 
     const handleDragEnd = useCallback((event: DragEndEvent) => {
         if (event.over?.id !== 'timeline') return;
         if (draggingItem === null) return;
 
         addClip.mutate(
-            {...draggingItem, mediaAssetId: '7851beeb-6fd9-4769-9252-e5f5edf5c27f'},
+            draggingItem,
             {
                 onError: (err) => {
                     toast({
@@ -88,7 +92,6 @@ const ProjectPage = (): JSX.Element => {
                 }
             }
         );
-        //setClips([...clips, draggingItem]);
 
         setDragState(false);
         setDraggingItem(null);
@@ -121,20 +124,16 @@ const ProjectPage = (): JSX.Element => {
                     </CardHeader>
                     <CardContent className='flex flex-row gap-2'>
                         <MediaAssetItem
-                            mediaAsset={{filename: 'video.webm', durationMs: 7000}}
-                            dragState={dragState}
-                        />
-                        <MediaAssetItem
-                            mediaAsset={{filename: 'video2.webm', durationMs: 2000}}
+                            mediaAsset={{id: 'b99a5d95-f543-4f96-853a-725766ab75b1', filename: 'video.webm', durationMs: 7000}}
                             dragState={dragState}
                         />
                     </CardContent>
                 </Card>
 
                 <VideoTimeline lengthMs={timelineLengthMs}>
-                    {clips.map(clip => (
+                    {clipsWithMedia.map(clip => (
                         <TimelineClip
-                            key={clip.mediaAsset.filename}
+                            key={clip.id}
                             clip={clip}
                             timelineLengthMs={timelineLengthMs}
                         />

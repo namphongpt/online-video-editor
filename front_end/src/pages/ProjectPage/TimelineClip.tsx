@@ -1,8 +1,9 @@
-import { Clip } from './VideoTimeline';
+import { ClipCreateDto } from '@/interfaces/clip';
+//import { Clip } from './VideoTimeline';
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from '@/components/ui/context-menu';
 
 interface TimelineClipProps {
-    clip: Clip;
+    clip: ClipCreateDto;
     timelineLengthMs: number;
 };
 
@@ -11,7 +12,7 @@ const TimelineClip = ({ clip, timelineLengthMs }: TimelineClipProps): JSX.Elemen
         <ContextMenu>
             <ContextMenuTrigger>
                 <div
-                    key={clip.mediaAsset.filename}
+                    //key={clip.id}
                     style={{
                         transform: `translateX(${clip.startTimeMs / timelineLengthMs * 100}cqw)`,
                         width: `${(clip.offsetEndMs - clip.offsetStartMs) / timelineLengthMs * 100}%`
