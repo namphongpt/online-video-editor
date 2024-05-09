@@ -11,6 +11,8 @@ import TimelineClip from './ProjectPage/TimelineClip';
 import { useAddClipQuery, useGetProjectClipsQuery } from '@/queries/clips.query';
 import { toast } from '@/components/ui/use-toast';
 import { ClipCreateDto } from '@/interfaces/clip';
+import MediaAssetUploadForm from './ProjectsOverviewPage/MediaAssetUploadForm';
+import { useGetMediaAssetsQuery } from '@/queries/media-assets.query';
 
 export type DragState = false | 'outside' | 'inside';
 
@@ -18,14 +20,15 @@ const ProjectPage = (): JSX.Element => {
     const { id } = useParams();
     const { data: project } = useGetProjectQuery(id!);
     const { data: clips } = useGetProjectClipsQuery(id!);
+    const { data: mediaAssets2 } = useGetMediaAssetsQuery();
     const addClip = useAddClipQuery(id!);
+
+    const mediaAssets = mediaAssets2.map(x => ({...x, durationMs: 6000}));
 
     const [ draggingItem, setDraggingItem ] = useState<ClipCreateDto | null>(null);
     const [ dragState, setDragState ] = useState<DragState>(false);
-    // TODO: populate after API call:
-    const mediaAssetsById: Record<string, {id: string; filename: string; durationMs: number;}> = {
-        'b99a5d95-f543-4f96-853a-725766ab75b1': {id: 'b99a5d95-f543-4f96-853a-725766ab75b1', filename: 'lol.mp4', durationMs: 6000}
-    };
+
+    const mediaAssetsById = Object.groupBy(mediaAssets, ({ id }) => id);
     const clipsWithMedia = clips.map(clip => (
         {...clip, mediaAsset: mediaAssetsById[clip.id]}
     ));
@@ -123,10 +126,14 @@ const ProjectPage = (): JSX.Element => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className='flex flex-row gap-2'>
-                        <MediaAssetItem
-                            mediaAsset={{id: 'b99a5d95-f543-4f96-853a-725766ab75b1', filename: 'video.webm', durationMs: 7000}}
-                            dragState={dragState}
-                        />
+                            {mediaAssets.map(mediaAsset => (
+                                <MediaAssetItem
+                                    key={mediaAsset.id}
+                                    mediaAsset={mediaAsset}
+                                    dragState={dragState}
+                                />
+                            ))}
+                        <MediaAssetUploadForm />
                     </CardContent>
                 </Card>
 

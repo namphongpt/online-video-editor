@@ -36,6 +36,29 @@ services:
     depends_on:
       - postgresql
 
+  media-service:
+    build:
+      context: ./MediaService/MediaService
+      args:
+        - BUILD_CONFIGURATION=Debug
+      target: build
+    command: sh -c "/app/efbundle && dotnet run"
+    container_name: media-service
+    restart: always
+    environment:
+      <<: *pg_credentials
+      POSTGRES_DB: media
+      AZURE_SERVICE_BUS_CONN_STR: Endpoint=sb://onlinevideoeditor-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=E73LCgSPtDMXIDzhuUNI3dQQxof2bq4FD+ASbEOLImY=
+      AZURE_STORAGE_CONN_STR: DefaultEndpointsProtocol=https;AccountName=onlinevideoeditor;AccountKey=iF9hoGilzhz3xecpFcLmtE6O5dBwcHluOv/HGc9S7SUaE7N76UUTaStW3fqvI+EL3I4uJPlF4uUZ+ASt2Sb73Q==;EndpointSuffix=core.windows.net
+    ports:
+      - 5173:5173
+    develop:
+      watch:
+        - path: ./MediaService
+          action: rebuild
+    depends_on:
+      - postgresql
+
   frontend:
     build:
       context: ./front_end

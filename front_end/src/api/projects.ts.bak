@@ -1,6 +1,0 @@
-import { useFetch } from '../utils/reactQuery'
-import { ProjectInterface } from '../interfaces/project'
-import { pathToUrl } from '../utils/router'
-
-export const useGetProjects = () =>
-    useFetch<ProjectInterface[]>(apiRoutes.getProjectList)
