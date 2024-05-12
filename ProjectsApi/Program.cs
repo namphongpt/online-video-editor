@@ -1,12 +1,17 @@
 using System.Text;
-using RabbitMQ.Client;
-using ProjectsApi.Models;
-using Microsoft.EntityFrameworkCore;
-using ProjectsApi.Services;
-using Microsoft.Data.SqlClient;
-using Npgsql;
-using Microsoft.OpenApi.Models;
+
 using Azure.Messaging.ServiceBus;
+
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+
+using Npgsql;
+
+using ProjectsApi.Models;
+using ProjectsApi.Services;
+
+using RabbitMQ.Client;
 
 
 var builder = WebApplication.CreateBuilder(args);

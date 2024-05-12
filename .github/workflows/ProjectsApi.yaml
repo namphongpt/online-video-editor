@@ -12,6 +12,14 @@ env:
   IMAGE_NAME: ProjectsApi
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-dotnet@v4
+    - run: dotnet format style --verify-no-changes --verbosity diagnostic
+
   release:
     permissions:
       contents: read

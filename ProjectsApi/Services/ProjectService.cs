@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using ProjectsApi.Models;
 
 namespace ProjectsApi.Services;

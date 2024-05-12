@@ -1,7 +1,10 @@
 using System.Net.Mime;
+
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Specialized;
+
 using MediaService.Models;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace MediaService.Services;

@@ -1,13 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-using ProjectsApi.Models;
 using AutoMapper;
+
+using Microsoft.EntityFrameworkCore;
+
+using ProjectsApi.Models;
 
 namespace ProjectsApi.Services;
 
 public class ClipService : IClipService
 {
     private readonly ProjectsContext _context;
-    private IMapper _mapper;
+    private readonly IMapper _mapper;
 
     public ClipService(ProjectsContext projectsContext)
     {

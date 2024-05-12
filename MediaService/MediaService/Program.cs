@@ -1,8 +1,11 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+
 using MediaService.Models;
 using MediaService.Services;
+
 using Microsoft.EntityFrameworkCore;
+
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
