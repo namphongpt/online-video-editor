@@ -12,7 +12,7 @@ public class ClipsController(IClipService clipService, IProjectService projectSe
     private readonly IClipService _clipService = clipService;
     private readonly IProjectService _projectService = projectService;
 
-    // TODO: should this route be changed to Projects/{projectId}/Clips?
+    // TODO: should this route be changed to Projects/{projectId}/Clips ?
     [HttpPost("Projects/{projectId}/Clips")]
     public async Task<ActionResult<Clip>> PostClip(ClipCreateDto clip)
     {
