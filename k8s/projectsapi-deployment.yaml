@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: projects-api
-          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi-893d1e40432aed6bbb206069a91efdc00b3a1bd6
+          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi-9cf056596878ab96d48cf8f4863e30046d4aa1e8
           ports:
           - containerPort: 8080
           env:
@@ -53,5 +53,5 @@ spec:
     app: projects-api
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 5003
+      targetPort: 5003
