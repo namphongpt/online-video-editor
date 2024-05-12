@@ -18,22 +18,22 @@ spec:
           ports:
           - containerPort: 8080
           env:
-            - name: DB_HOST
+            - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
                   name: projectsapi-database-credentials
                   key: host
-            - name: DB_USER
+            - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: projectsapi-database-credentials
                   key: username
-            - name: DB_PASSWORD
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: projectsapi-database-credentials
                   key: password
-            - name: DB_NAME
+            - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
                   name: projectsapi-database-credentials
