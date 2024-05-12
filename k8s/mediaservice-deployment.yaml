@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: media-service-api
-          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:MediaService
+          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:MediaService-beb1a91e1f147405de083cc142266c42b6a916a4
           ports:
           - containerPort: 8080
           env:
@@ -58,5 +58,5 @@ spec:
     app: media-service-api
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 5173
+      targetPort: 5173
