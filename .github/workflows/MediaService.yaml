@@ -49,9 +49,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          context: ./MediaService
+          context: ./MediaService/MediaService
           tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}-${{ github.sha }}
-          file: MediaService/Dockerfile
+          file: MediaService/MediaService/Dockerfile
 
   deploy:
      needs: [ release ]

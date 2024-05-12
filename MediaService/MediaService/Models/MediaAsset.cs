@@ -7,4 +7,3 @@ public class MediaAsset
     public DateTime UploadedOn { get; set; }
     public DateTime LastAccessedOn { get; set; }
 }
-
