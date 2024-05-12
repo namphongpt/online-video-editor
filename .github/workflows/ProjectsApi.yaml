@@ -20,7 +20,17 @@ jobs:
     - uses: actions/setup-dotnet@v4
     - run: dotnet format style --verify-no-changes --verbosity diagnostic
 
+  test:
+    needs: [ lint ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v4
+      - run: dotnet test
+
   release:
+    needs: [ test ]
     permissions:
       contents: read
       id-token: write
