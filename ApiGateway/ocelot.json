@@ -1,0 +1,30 @@
+{
+    "Routes": [
+        {
+            "UpstreamPathTemplate": "/Projects/{everything}",
+            "UpstreamHttpMethod": [ "POST", "PUT", "DELETE", "GET" ],
+
+            "DownstreamPathTemplate": "/Projects/{everything}",
+            "DownstreamScheme": "http",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "projects-api",
+                    "Port": 5003
+                }
+            ]
+        },
+        {
+            "UpstreamPathTemplate": "/MediaAssets/{everything}",
+            "UpstreamHttpMethod": [ "POST", "PUT", "DELETE", "GET" ],
+
+            "DownstreamPathTemplate": "/MediaAssets/{everything}",
+            "DownstreamScheme": "http",
+            "DownStreamHostAndPorts": [
+                {
+                    "Host": "media-service-api",
+                    "Port": 5173
+                }
+            ]
+        }
+    ]
+}

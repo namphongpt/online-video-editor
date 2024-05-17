@@ -1,0 +1,81 @@
+name: ApiGateway
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - ApiGateway/**
+
+env:
+  AZURE_LOGIN_SERVER: onlinevideoeditor.azurecr.io
+  IMAGE_NAME: ApiGateway
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-dotnet@v4
+    - run: dotnet format style --verify-no-changes --verbosity diagnostic
+
+  test:
+    needs: [ lint ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v4
+      - run: dotnet test
+
+  release:
+    needs: [ test ]
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Docker login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.AZURE_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push to ACR
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./ApiGateway
+          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}-${{ github.sha }}
+          file: ApiGateway/Dockerfile
+
+  deploy:
+     needs: [ release ]
+     runs-on: ubuntu-latest
+     steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Azure login
+        id: login
+        uses: azure/login@v1.4.3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: onlinevideoeditor
+          cluster-name: online-video-editor
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: 'default'
+          manifests: |
+            k8s/apigateway-deployment.yaml
+          images: 'onlinevideoeditor.azurecr.io/onlinevideoeditor:${{ env.IMAGE_NAME }}-${{ github.sha }}'
+          pull-images: false

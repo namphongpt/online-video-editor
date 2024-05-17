@@ -19,10 +19,10 @@ builder.Services.AddDbContext<MediaContext>(opt =>
     opt.UseNpgsql(
         new NpgsqlConnectionStringBuilder()
         {
-            Host = Environment.GetEnvironmentVariable("DB_HOST"),
-            Database = Environment.GetEnvironmentVariable("DB_NAME"),
-            Username = Environment.GetEnvironmentVariable("DB_USER"),
-            Password = Environment.GetEnvironmentVariable("DB_PASSWORD")
+            Host = Environment.GetEnvironmentVariable("POSTGRES_HOST"),
+            Database = Environment.GetEnvironmentVariable("POSTGRES_DB"),
+            Username = Environment.GetEnvironmentVariable("POSTGRES_USER"),
+            Password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD")
         }.ConnectionString
     )
 );
