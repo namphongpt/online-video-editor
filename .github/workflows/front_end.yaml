@@ -66,4 +66,3 @@ jobs:
           manifests: |
             k8s/frontend-deployment.yaml
           images: 'onlinevideoeditor.azurecr.io/front_end'
-          pull-images: false
