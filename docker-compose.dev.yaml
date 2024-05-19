@@ -27,6 +27,7 @@ services:
       <<: *pg_credentials
       POSTGRES_DB: projects
       AZURE_SERVICE_BUS_CONN_STR: Endpoint=sb://onlinevideoeditor-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=E73LCgSPtDMXIDzhuUNI3dQQxof2bq4FD+ASbEOLImY=
+      AUTH0_DOMAIN: dev-y4xffymaoj0vh0eb.eu.auth0.com
     ports:
       - 5003:5003
     develop:
@@ -50,6 +51,7 @@ services:
       POSTGRES_DB: media
       AZURE_SERVICE_BUS_CONN_STR: Endpoint=sb://onlinevideoeditor-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=E73LCgSPtDMXIDzhuUNI3dQQxof2bq4FD+ASbEOLImY=
       AZURE_STORAGE_CONN_STR: DefaultEndpointsProtocol=https;AccountName=onlinevideoeditor;AccountKey=iF9hoGilzhz3xecpFcLmtE6O5dBwcHluOv/HGc9S7SUaE7N76UUTaStW3fqvI+EL3I4uJPlF4uUZ+ASt2Sb73Q==;EndpointSuffix=core.windows.net
+      AUTH0_DOMAIN: dev-y4xffymaoj0vh0eb.eu.auth0.com
     ports:
       - 5173:5173
     develop:
@@ -71,6 +73,9 @@ services:
       - ./front_end/node_modules:/app/node_modules
     ports:
       - 3000:3000
+    environment:
+      REACT_APP_AUTH0_DOMAIN: dev-y4xffymaoj0vh0eb.eu.auth0.com
+      REACT_APP_AUTH0_CLIENT_ID: 9j4ED7GEAWPZaEDnvSlUGDOzz7EcvVB0
 
   api_gateway:
     build:

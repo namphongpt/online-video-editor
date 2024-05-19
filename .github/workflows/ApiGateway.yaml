@@ -50,7 +50,7 @@ jobs:
         with:
           push: true
           context: ./ApiGateway
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}-${{ github.sha }}
+          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}
           file: ApiGateway/Dockerfile
 
   deploy:
@@ -77,5 +77,5 @@ jobs:
           namespace: 'default'
           manifests: |
             k8s/apigateway-deployment.yaml
-          images: 'onlinevideoeditor.azurecr.io/onlinevideoeditor:${{ env.IMAGE_NAME }}-${{ github.sha }}'
+          images: 'onlinevideoeditor.azurecr.io/onlinevideoeditor:${{ env.IMAGE_NAME }}'
           pull-images: false

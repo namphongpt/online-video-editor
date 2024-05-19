@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: media-service-api
-          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:MediaService-beb1a91e1f147405de083cc142266c42b6a916a4
+          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:MediaService
           ports:
           - containerPort: 8080
           env:
@@ -48,6 +48,8 @@ spec:
                 secretKeyRef:
                   name: blob-storage-credentials
                   key: connection_string
+            - name: AUTH0_DOMAIN
+              value: https://onlinevideoeditor.eu.auth0.com/
 ---
 apiVersion: v1
 kind: Service

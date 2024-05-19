@@ -38,7 +38,7 @@ builder.Services.AddScoped<IMediaAssetService, MediaAssetService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.Authority = "https://dev-y4xffymaoj0vh0eb.eu.auth0.com/";
+                    options.Authority = Environment.GetEnvironmentVariable("AUTH0_DOMAIN");//"https://dev-y4xffymaoj0vh0eb.eu.auth0.com/";
                     options.Audience = "api-gateway";
                 });
 

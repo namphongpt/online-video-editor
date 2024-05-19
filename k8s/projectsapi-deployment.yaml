@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: projects-api
-          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi-9cf056596878ab96d48cf8f4863e30046d4aa1e8
+          image: onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi
           ports:
           - containerPort: 8080
           env:
@@ -43,6 +43,8 @@ spec:
                 secretKeyRef:
                   name: service-bus-credentials
                   key: connection_string
+            - name: AUTH0_DOMAIN
+              value: https://onlinevideoeditor.eu.auth0.com/
 ---
 apiVersion: v1
 kind: Service

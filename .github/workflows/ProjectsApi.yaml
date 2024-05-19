@@ -50,7 +50,7 @@ jobs:
         with:
           push: true
           context: ./ProjectsApi
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}-${{ github.sha }}
+          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}
           file: ProjectsApi/Dockerfile
 
   deploy:
@@ -77,5 +77,5 @@ jobs:
           namespace: 'default'
           manifests: |
             k8s/projectsapi-deployment.yaml
-          images: 'onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi-${{ github.sha }}'
+          images: 'onlinevideoeditor.azurecr.io/onlinevideoeditor:ProjectsApi'
           pull-images: false
