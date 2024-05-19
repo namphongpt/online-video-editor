@@ -24,9 +24,14 @@ const LoadedProjectsTableBody = (): JSX.Element => {
         <TableCell>
           <Badge variant="outline">Concept</Badge>
         </TableCell>
-        <TableCell className="hidden md:table-cell">
+        <TableCell className="hidden md:table-cell" title={project.createdOn.toUTCString()}>
           {/* TODO: Human date (tot maand terug), maar dan als je op hovert de gehele datum */}
-          14-04-2024
+          {
+            new Intl.DateTimeFormat(
+              'nl-NL',
+              { day: 'numeric', month: 'long', year: 'numeric' }
+            ).format(project.createdOn)
+          }
         </TableCell>
         <TableCell>
             <Button asChild>

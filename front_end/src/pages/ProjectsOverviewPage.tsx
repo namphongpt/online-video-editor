@@ -31,6 +31,7 @@ import {
 import ProjectsTableBody from "./ProjectsOverviewPage/ProjectsTableBody"
 import CreateProjectDialogButton from "./ProjectsOverviewPage/CreateProjectDialogButton"
 import Layout from "@/components/Layout"
+import { withAuthenticationRequired } from "@auth0/auth0-react"
 
 const ProjectsOverview = () => {
   return (
@@ -117,4 +118,4 @@ const ProjectsOverview = () => {
   )
 };
 
-export default ProjectsOverview;
+export default withAuthenticationRequired(ProjectsOverview);

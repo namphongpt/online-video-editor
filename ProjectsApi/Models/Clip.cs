@@ -7,7 +7,7 @@ public class Clip
 {
     public Guid Id { get; set; }
     public Guid ProjectId { get; set; }
-    public Project Project { get; set; }
+    public required Project Project { get; set; }
 
     public Guid MediaAssetId { get; set; }
     public int OffsetStartMs { get; set; }

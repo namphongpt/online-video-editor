@@ -2,6 +2,7 @@ using AutoMapper;
 
 using Microsoft.EntityFrameworkCore;
 
+using ProjectsApi.Dto;
 using ProjectsApi.Models;
 
 namespace ProjectsApi.Services;
@@ -17,6 +18,11 @@ public class ClipService : IClipService
         var configuration = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<ClipCreateDto, Clip>();
+            cfg.CreateMap<ClipCreateBodyDto, ClipCreateDto>()
+               .ForMember(
+                    dest => dest.ProjectId,
+                    opt => opt.MapFrom((_, _, _, context) => context.Items["ProjectId"])
+                );
         });
         _mapper = configuration.CreateMapper();
     }
@@ -32,11 +38,17 @@ public class ClipService : IClipService
                                    .ToListAsync();
     }
 
-    public async Task<Clip> CreateClipAsync(ClipCreateDto clipCreateDto)
+    public async Task<Clip> CreateClipAsync(Guid projectId, ClipCreateBodyDto clipCreateBodyDto)
     {
+        var clipCreateDto = _mapper.Map<ClipCreateDto>(
+            clipCreateBodyDto,
+            opt => opt.Items["ProjectId"] = projectId
+        );
         var clip = _mapper.Map<Clip>(clipCreateDto);
+
         await _context.Clips.AddAsync(clip);
         await _context.SaveChangesAsync();
+
         return clip;
     }
 }

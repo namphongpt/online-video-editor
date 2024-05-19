@@ -1,20 +1,31 @@
 import { ClipInterface } from '@/interfaces/clip';
 import axios from 'axios';
 import { CreateClipParam } from './clipRepository.param';
+import { Auth0ContextInterface } from '@auth0/auth0-react';
+import createAuthenticatedClient from '../apiClient';
 
 type Clips = ReadonlyArray<ClipInterface>;
 
-export const fetchProjectClips = (projectId: string): Promise<Clips> =>
-    axios.get(`/api/Projects/${projectId}/Clips`).then(res => res.data);
+export const fetchProjectClips = async (projectId: string, auth: Auth0ContextInterface): Promise<Clips> => {
+    const client = await createAuthenticatedClient(auth);
 
-export const createClip = (projectId: string, clipParams: CreateClipParam): Promise<ClipInterface> =>
-    axios.post(
+    const response = await client.get(`/api/Projects/${projectId}/Clips`);
+    
+    return response.data;
+};
+
+export const createClip = async (projectId: string, clipParams: CreateClipParam, auth: Auth0ContextInterface): Promise<ClipInterface> => {
+    const client = await createAuthenticatedClient(auth);
+
+    const response = await client.post(
         `/api/Projects/${projectId}/Clips`,
         {
             ...clipParams,
-            projectId,
             startTimeMs: clipParams.startTimeMs.toFixed(),
             offsetStartMs: clipParams.offsetStartMs.toFixed(),
             offsetEndMs: clipParams.offsetEndMs.toFixed()
         }
-    ).then(res => res.data)
+    );
+    
+    return response.data;
+};

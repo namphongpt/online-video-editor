@@ -13,6 +13,7 @@ import { toast } from '@/components/ui/use-toast';
 import { ClipCreateDto } from '@/interfaces/clip';
 import MediaAssetUploadForm from './ProjectsOverviewPage/MediaAssetUploadForm';
 import { useGetMediaAssetsQuery } from '@/queries/media-assets.query';
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 export type DragState = false | 'outside' | 'inside';
 
@@ -159,4 +160,4 @@ const ProjectPage = (): JSX.Element => {
     )
 };
 
-export default ProjectPage;
+export default withAuthenticationRequired(ProjectPage);

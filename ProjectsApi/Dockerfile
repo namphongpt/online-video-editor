@@ -14,7 +14,10 @@ COPY ./ProjectsApi.csproj .
 RUN dotnet restore ./ProjectsApi.csproj
 
 COPY . .
+COPY ./Migrations/ ./Migrations/
 RUN dotnet ef migrations bundle -o /app/efbundle
+
+COPY . .
 RUN dotnet build ./ProjectsApi.csproj -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

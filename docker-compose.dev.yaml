@@ -77,6 +77,10 @@ services:
       context: ./ApiGateway
     container_name: api-gateway
     restart: always
+    develop:
+      watch:
+        - path: ./ApiGateway
+          action: rebuild
     ports:
       - 8080:8080
 

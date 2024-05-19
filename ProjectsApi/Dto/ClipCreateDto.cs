@@ -1,4 +1,4 @@
-namespace ProjectsApi.Models;
+namespace ProjectsApi.Dto;
 
 public class ClipCreateDto
 {

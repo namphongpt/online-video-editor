@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 
 using Ocelot.DependencyInjection;
@@ -25,7 +26,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-await app.UseOcelot();
 app.UseHttpsRedirection();
+
+await app.UseOcelot();
 
 app.Run();
