@@ -15,7 +15,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: actions/setup-dotnet@v4
     - run: dotnet format style --verify-no-changes --verbosity diagnostic
@@ -24,7 +24,7 @@ jobs:
     needs: [ lint ]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
       - run: dotnet test
@@ -36,7 +36,7 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Docker login to ACR
         uses: azure/docker-login@v1
@@ -58,7 +58,7 @@ jobs:
      runs-on: ubuntu-latest
      steps:
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3

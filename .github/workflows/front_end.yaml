@@ -18,7 +18,7 @@ jobs:
       id-token: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Docker login to ACR
         uses: azure/docker-login@v1
@@ -46,7 +46,7 @@ jobs:
      #     k8s-url: https://online-video-editor-dns-c1pmbjz1.hcp.eastus.azmk8s.io:443
      #     k8s-secret: ${{ secrets.K8S_SECRET }}
       - name: Checkout source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3
