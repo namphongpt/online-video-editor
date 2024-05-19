@@ -14,14 +14,9 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: onlinevideoeditor.azurecr.io/front_end:latest
+          image: onlinevideoeditor.azurecr.io/front_end:a5e34521385d15d4a7d0796d4bfc4dc57fb0a3b8
           ports:
           - containerPort: 80
-          env:
-            - name: REACT_APP_AUTH0_DOMAIN
-              value: onlinevideoeditor.eu.auth0.com
-            - name: REACT_APP_AUTH0_CLIENT_ID
-              value: UY5hhSigjsOmvkufc4JOZ2ATPBvIQ09Q
 ---
 apiVersion: v1
 kind: Service
@@ -34,5 +29,5 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: LoadBalancer
+  type: ClusterIP
 
