@@ -32,7 +32,7 @@ jobs:
         with:
           push: true
           context: ./${{ env.SERVICE_NAME }}
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.SERVICE_NAME }}
+          tags: ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}
           file: ${{ env.SERVICE_NAME }}/Dockerfile
 
   deploy:
@@ -65,5 +65,5 @@ jobs:
           namespace: 'default'
           manifests: |
             k8s/frontend-deployment.yaml
-          images: 'onlinevideoeditor.azurecr.io/onlinevideoeditor:front_end'
+          images: 'onlinevideoeditor.azurecr.io/front_end'
           pull-images: false
