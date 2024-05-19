@@ -3,6 +3,7 @@ using System.Net.Mime;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Specialized;
 
+using MediaService.Dto;
 using MediaService.Models;
 
 using Microsoft.EntityFrameworkCore;
@@ -20,10 +21,15 @@ public class MediaAssetService : IMediaAssetService
         _context = mediaContext;
     }
 
-    public async Task<IEnumerable<MediaAsset>> GetAllAsync()
+    public async Task<IEnumerable<MediaAsset>> GetAllAsync(string userId)
     {
-//        _blobContainerClient.
-        return await _context.MediaAssets.ToListAsync();
+        return await _context.MediaAssets.Where(m => m.UserId == userId)
+                                         .ToListAsync();
+    }
+
+    public Task<MediaAsset?> GetMediaAssetAsync(Guid id)
+    {
+        return _context.MediaAssets.FirstOrDefaultAsync(m => m.Id == id);
     }
 
     public async Task<ContentTypedStream> DownloadMediaAsync(Guid id)//MediaAsset mediaAsset)
@@ -48,7 +54,7 @@ public class MediaAssetService : IMediaAssetService
             Id = mediaAssetId,
             Filename = mediaAssetCreateDto.Filename,
             UploadedOn = DateTime.UtcNow,
-            LastAccessedOn = DateTime.UtcNow
+            UserId = mediaAssetCreateDto.UserId
         };
 
         await _context.MediaAssets.AddAsync(mediaAsset);

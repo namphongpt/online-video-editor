@@ -4,6 +4,7 @@ using Azure.Storage.Blobs.Models;
 using MediaService.Models;
 using MediaService.Services;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 using Npgsql;
@@ -34,6 +35,13 @@ builder.Services.AddScoped(provider =>
 );
 builder.Services.AddScoped<IMediaAssetService, MediaAssetService>();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = "https://dev-y4xffymaoj0vh0eb.eu.auth0.com/";
+                    options.Audience = "api-gateway";
+                });
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -51,6 +59,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

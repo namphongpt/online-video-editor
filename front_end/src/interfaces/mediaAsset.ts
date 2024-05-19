@@ -3,5 +3,5 @@ export interface MediaAsset {
     filename: string;
     durationMs: number;
     uploadedOn: Date;
-    lastAccessedOn: Date;
+    userId: string;
 };

@@ -1,6 +1,5 @@
 import { ProjectInterface } from '@/interfaces/project'
 import { CreateProjectParam } from './projectRepository.param'
-import axios from 'axios'
 import { Auth0ContextInterface } from '@auth0/auth0-react'
 import createAuthenticatedClient from '../apiClient'
 

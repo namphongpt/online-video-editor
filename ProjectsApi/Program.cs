@@ -21,7 +21,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-Console.WriteLine("Password: " + Environment.GetEnvironmentVariable("DB_PASSWORD"));
 
 builder.Services.AddDbContext<ProjectsContext>(opt =>
     opt.UseNpgsql(
