@@ -50,7 +50,7 @@ jobs:
         with:
           push: true
           context: ./MediaService/MediaService
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.IMAGE_NAME }}
+          tags: ${{ env.AZURE_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           file: MediaService/MediaService/Dockerfile
 
   deploy:
@@ -77,5 +77,5 @@ jobs:
           namespace: 'default'
           manifests: |
             k8s/mediaservice-deployment.yaml
-          images: 'onlinevideoeditor.azurecr.io/onlinevideoeditor:${{ env.IMAGE_NAME }}'
+          images: 'onlinevideoeditor.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}'
           pull-images: false
