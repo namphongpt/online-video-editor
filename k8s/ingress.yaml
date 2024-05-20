@@ -4,7 +4,7 @@ metadata:
   name: ingress
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: public
@@ -16,14 +16,14 @@ spec:
   - host: oveapp.samvanhunsel.nl
     http:
       paths:
-#      - path: /nodeapp(/|$)(.*)
-#        pathType: Prefix
-#        backend:
-#          service:
-#            name: nodesvc
-#            port:
-#              number: 80
-      - path: /(.*)
+      - path: /api(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 5000
+      - path: /()(.*)
         pathType: Prefix
         backend:
           service:
