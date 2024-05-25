@@ -5,16 +5,20 @@ using TechTalk.SpecFlow;
 
 namespace AcceptanceTests.Hooks;
 
+// Currently, a new browser instance is spinned up for each scenario. Re-use is
+// possible, but is glitchy as the session needs to be manually reset. See:
+// https://docs.specflow.org/projects/specflow/en/latest/ui-automation/Selenium-with-Page-Object-Pattern.html#using-the-same-browser-for-all-scenarios
+
 [Binding]
 public class DockerControllerHooks
 {
-    private static ICompositeService _compositeService;
-    private IObjectContainer _objectContainer;
+    private static ICompositeService? _compositeService;
+//    private IObjectContainer _objectContainer;
 
-    public DockerControllerHooks(IObjectContainer objectContainer)
-    {
-        _objectContainer = objectContainer;
-    }
+//    public DockerControllerHooks(IObjectContainer objectContainer)
+//    {
+//        _objectContainer = objectContainer;
+//    }
 
     [BeforeTestRun]
     public static void DockerComposeUp()
@@ -22,7 +26,7 @@ public class DockerControllerHooks
         _compositeService = new Builder()
             .UseContainer()
             .UseCompose()
-            .FromFile("../docker-compose.yaml")
+            .FromFile("../../docker-compose.dev.yaml")
             .RemoveOrphans()
             .WaitForHttp(
                 "gateway",
@@ -37,12 +41,10 @@ public class DockerControllerHooks
     [AfterTestRun]
     public static void DockerComposeDown()
     {
+        if (_compositeService is null)
+            return;
+
         _compositeService.Stop();
         _compositeService.Dispose();
     }
-
-    //private static string GetDockerComposeLocation(string dockerComposeFileName)
-    //{
-    //    
-    //}
 }

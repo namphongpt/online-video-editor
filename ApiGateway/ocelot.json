@@ -9,7 +9,7 @@
             "DownStreamHostAndPorts": [
                 {
                     "Host": "projects-api",
-                    "Port": 5003
+                    "Port": 8080
                 }
             ]
         },
@@ -22,7 +22,7 @@
             "DownStreamHostAndPorts": [
                 {
                     "Host": "media-service-api",
-                    "Port": 5173
+                    "Port": 8080
                 }
             ]
         }

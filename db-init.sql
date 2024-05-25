@@ -1,1 +1,2 @@
 CREATE TABLE projects;
+CREATE TABLE media;

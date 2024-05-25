@@ -82,7 +82,11 @@ const CreateProjectDialogButton = (): JSX.Element => {
                     </div>
 
                     <DialogFooter>
-                        <Button type="submit" disabled={addProject.isPending}>
+                        <Button
+                            id="create-project-submit"
+                            type="submit"
+                            disabled={addProject.isPending}
+                        >
                             Maak aan
                         </Button>
                     </DialogFooter>

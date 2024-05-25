@@ -4,7 +4,7 @@ services:
     container_name: postgresql
     restart: always
     volumes:
-      - ./dev-db-init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db-init.sql:/docker-entrypoint-initdb.d/init.sql
     environment: &pg_credentials
       POSTGRES_USER: dbuser
       POSTGRES_PASSWORD: dbpass
@@ -27,7 +27,7 @@ services:
       <<: *pg_credentials
       POSTGRES_DB: projects
       AZURE_SERVICE_BUS_CONN_STR: Endpoint=sb://onlinevideoeditor-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=E73LCgSPtDMXIDzhuUNI3dQQxof2bq4FD+ASbEOLImY=
-      AUTH0_DOMAIN: dev-y4xffymaoj0vh0eb.eu.auth0.com
+      AUTH0_DOMAIN: https://dev-y4xffymaoj0vh0eb.eu.auth0.com
     ports:
       - 5003:5003
     develop:
@@ -51,7 +51,7 @@ services:
       POSTGRES_DB: media
       AZURE_SERVICE_BUS_CONN_STR: Endpoint=sb://onlinevideoeditor-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=E73LCgSPtDMXIDzhuUNI3dQQxof2bq4FD+ASbEOLImY=
       AZURE_STORAGE_CONN_STR: DefaultEndpointsProtocol=https;AccountName=onlinevideoeditor;AccountKey=iF9hoGilzhz3xecpFcLmtE6O5dBwcHluOv/HGc9S7SUaE7N76UUTaStW3fqvI+EL3I4uJPlF4uUZ+ASt2Sb73Q==;EndpointSuffix=core.windows.net
-      AUTH0_DOMAIN: dev-y4xffymaoj0vh0eb.eu.auth0.com
+      AUTH0_DOMAIN: https://dev-y4xffymaoj0vh0eb.eu.auth0.com
     ports:
       - 5173:5173
     develop:
@@ -65,6 +65,8 @@ services:
     build:
       context: ./front_end
       target: build
+      args:
+        - ENVIRONMENT=development
     command: npm run start
     container_name: front-end
     restart: always
@@ -92,6 +94,7 @@ services:
   dev_gateway:
     build:
       context: ./dev_gateway
+    container_name: gateway
     restart: always
     depends_on:
       - frontend
