@@ -46,7 +46,7 @@ jobs:
       - name: Run tests
         env:
           SELENIUM_URL: http://localhost:4444/wd/hub
-        run: dotnet test AcceptanceTests/AcceptanceTests.csproj
+        run: dotnet test AcceptanceTests/AcceptanceTests.csproj --verbosity diagnostic
 
   release:
     needs: [ acceptance-tests ]
