@@ -5,10 +5,6 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Install dotnet-ef so we can generate a migration bundle.
-# ENV PATH $PATH:/root/.dotnet/tools
-# RUN dotnet tool install --global dotnet-ef
-
 COPY ./ApiGateway.csproj .
 RUN dotnet restore ./ApiGateway.csproj
 
