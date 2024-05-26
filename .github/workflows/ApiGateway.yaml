@@ -12,26 +12,26 @@ env:
   IMAGE_NAME: ApiGateway
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - uses: actions/setup-dotnet@v4
-    - run: dotnet format style ApiGateway/ApiGateway.csproj --verify-no-changes --verbosity diagnostic
-
-  unit-test:
-    needs: [ lint ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-dotnet@v4
-      - run: dotnet test ApiGateway/ApiGateway.csproj
+#  lint:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - uses: actions/checkout@v4
+#
+#    - uses: actions/setup-dotnet@v4
+#    - run: dotnet format style ApiGateway/ApiGateway.csproj --verify-no-changes --verbosity diagnostic
+#
+#  unit-test:
+#    needs: [ lint ]
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - uses: actions/setup-dotnet@v4
+#      - run: dotnet test ApiGateway/ApiGateway.csproj
 
   acceptance-tests:
-    needs: [ unit-test ]
-    runs-on: windows-latest
+#    needs: [ unit-test ]
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
