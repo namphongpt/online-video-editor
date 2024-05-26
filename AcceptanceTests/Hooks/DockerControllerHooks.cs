@@ -26,7 +26,7 @@ public class DockerControllerHooks
         _compositeService = new Builder()
             .UseContainer()
             .UseCompose()
-            .FromFile("../../docker-compose.dev.yaml")
+            .FromFile("../../docker-compose.yaml")
             .RemoveOrphans()
             .WaitForHttp(
                 "gateway",
