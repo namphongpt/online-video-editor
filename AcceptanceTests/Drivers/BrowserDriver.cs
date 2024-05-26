@@ -18,10 +18,12 @@ public class BrowserDriver : IDisposable
 
     private IWebDriver CreateWebDriver()
     {
+        Console.WriteLine("does it get stuck here?");
         var chromeDriverService = ChromeDriverService.CreateDefaultService();
         var chromeOptions = new ChromeOptions();
         chromeOptions.AddArgument("headless");
         var chromeDriver = new ChromeDriver(chromeDriverService, chromeOptions);
+        Console.WriteLine("or on line 26?");
  //       var seleniumUrl = Environment.GetEnvironmentVariable("SELENIUM_URL")!;
  //       var chromeDriver = new RemoteWebDriver(new Uri(seleniumUrl), chromeOptions);
 

@@ -22,6 +22,7 @@ public class DockerControllerHooks
     [BeforeTestRun]
     public static void DockerComposeUp()
     {
+        Console.WriteLine("maybe this is the problem...");
         _compositeService = new Builder()
             .UseContainer()
             .UseCompose()
@@ -35,6 +36,7 @@ public class DockerControllerHooks
             )
             .Build()
             .Start();
+        Console.WriteLine("or does waiting on docker take too long?");
     }
 
     [AfterTestRun]
