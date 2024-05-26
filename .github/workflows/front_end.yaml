@@ -27,13 +27,26 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push to ACR
+      - name: Build staging release and push to ACR
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./${{ env.SERVICE_NAME }}
+          tags: ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}-staging:${{ github.sha }}
+          file: ${{ env.SERVICE_NAME }}/Dockerfile
+          build-args:
+            ENVIRONMENT=staging
+
+      - name: Build production release and push to ACR
         uses: docker/build-push-action@v2
         with:
           push: true
           context: ./${{ env.SERVICE_NAME }}
           tags: ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
           file: ${{ env.SERVICE_NAME }}/Dockerfile
+          build-args:
+            ENVIRONMENT=production
+
 
   deploy:
      needs: [ release ]

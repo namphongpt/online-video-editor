@@ -11,9 +11,15 @@ COPY . .
 RUN if [ "$ENVIRONMENT" = "production" ]; then \
         mv .env.prod .env; \
         rm .env.dev; \
+        rm .env.staging; \
+    elif [ "$ENVIRONMENT" = "staging" ]; then \
+        mv .env.staging .env; \
+        rm .env.dev; \
+        rm .env.prod; \
     else \
         cp .env.dev .env; \
         rm .env.prod; \
+        rm .env.staging; \
     fi
 
 RUN npm run build
