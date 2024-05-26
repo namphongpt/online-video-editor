@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
-      - uses: actions/cryptic-wizard/run-specflow-tests@v1.3.3
+      - uses: cryptic-wizard/run-specflow-tests@v1.3.3
         with:
           test-assembly-path: AcceptanceTests/bin/Release/net8.0
           test-assembly-dll: AcceptanceTests.dll
