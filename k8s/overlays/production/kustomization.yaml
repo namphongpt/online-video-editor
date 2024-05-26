@@ -1,0 +1,6 @@
+resources:
+- ../../base
+- mediaservice-database-secret.yaml
+- projectsapi-database-secret.yaml
+- service-bus-secret.yaml
+- blobstorage-secret.yaml

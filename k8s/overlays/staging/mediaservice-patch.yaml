@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-service-api
+spec:
+  template:
+    spec:
+      containers:
+        - name: media-service-api
+          env:
+            - name: AUTH0_DOMAIN
+              value: https://dev-y4xffymaoj0vh0eb.eu.auth0.com/

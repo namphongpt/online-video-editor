@@ -1,0 +1,7 @@
+resources:
+  - apigateway-deployment.yaml
+  - cluster-issuer.yaml
+  - frontend-deployment.yaml
+  - mediaservice-deployment.yaml
+  - projectsapi-deployment.yaml
+  - ingress.yaml

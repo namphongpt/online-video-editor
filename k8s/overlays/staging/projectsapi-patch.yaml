@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: projects-api
+spec:
+  template:
+    metadata:
+      labels:
+        app: projects-api
+    spec:
+      containers:
+        - name: projects-api
+          env:
+            - name: AUTH0_DOMAIN
+              value: https://dev-y4xffymaoj0vh0eb.eu.auth0.com/

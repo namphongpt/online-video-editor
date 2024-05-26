@@ -1,0 +1,46 @@
+resources:
+- ../../base
+- staging-namespace.yaml
+- mediaservice-database-secret.yaml
+- projectsapi-database-secret.yaml
+- service-bus-secret.yaml
+- blobstorage-secret.yaml
+
+namespace: staging
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+patches:
+  - target:
+      kind: Ingress
+      name: ingress
+    patch: |-
+      - op: replace
+        path: /spec/ingressClassName
+        value: ingress-staging
+      - op: replace
+        path: /spec/tls/0/hosts/0
+        value: oveapp-staging.samvanhunsel.nl
+      - op: replace
+        path: /spec/rules/0/host
+        value: oveapp-staging.samvanhunsel.nl
+
+  - target:
+      kind: Deployment
+      name: frontend
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/containers/0/image
+        value: onlinevideoeditor.azurecr.io/front_end-staging:4eb63ef258e9745df999fd4938740fb72eeac28a
+
+  - target:
+      kind: ClusterIssuer
+      name: letsencrypt-production
+    patch: |-
+      - op: replace
+        path: /spec/acme/solvers/0/http01/ingress/class
+        value: staging
+
+  - path: projectsapi-patch.yaml
+
+  - path: mediaservice-patch.yaml
