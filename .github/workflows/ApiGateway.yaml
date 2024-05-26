@@ -33,14 +33,14 @@ jobs:
 #    needs: [ unit-test ]
     runs-on: ubuntu-latest
 
-    services:
-      selenium:
-        image: selenium/standalone-firefox:latest
-        ports:
-          - 4444:4444
-
+#    services:
+#      selenium:
+#        image: selenium/standalone-firefox:latest
+#        ports:
+#          - 4444:4444
     steps:
       - uses: actions/checkout@v4
+      - uses: nanasess/setup-chromedriver@v2
       - uses: actions/setup-dotnet@v4
 
       - name: Run tests
