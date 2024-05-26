@@ -24,6 +24,7 @@
                     "Host": "media-service-api",
                     "Port": 8080
                 }
+
             ]
         }
     ]
