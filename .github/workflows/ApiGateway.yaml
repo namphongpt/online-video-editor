@@ -31,11 +31,16 @@ jobs:
 
   acceptance-tests:
 #    needs: [ unit-test ]
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
+      - uses: actions/cryptic-wizard/run-specflow-tests@v1.3.3
+        with:
+          test-assembly-path: AcceptanceTests/bin/Release/net8.0
+          test-assembly-dll: AcceptanceTests.dll
+          output-html: SpecFlow.html
       - run: dotnet test AcceptanceTests/AcceptanceTests.csproj
 
   release:
