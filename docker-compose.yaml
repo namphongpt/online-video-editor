@@ -30,10 +30,6 @@ services:
       AUTH0_DOMAIN: https://dev-y4xffymaoj0vh0eb.eu.auth0.com
     ports:
       - 5003:5003
-    develop:
-      watch:
-        - path: ./ProjectsApi
-          action: rebuild
     depends_on:
       - postgresql
 
@@ -54,10 +50,6 @@ services:
       AUTH0_DOMAIN: https://dev-y4xffymaoj0vh0eb.eu.auth0.com
     ports:
       - 5173:5173
-    develop:
-      watch:
-        - path: ./MediaService
-          action: rebuild
     depends_on:
       - postgresql
 
@@ -84,10 +76,6 @@ services:
       context: ./ApiGateway
     container_name: api-gateway
     restart: always
-    develop:
-      watch:
-        - path: ./ApiGateway
-          action: rebuild
     ports:
       - 8080:8080
 
