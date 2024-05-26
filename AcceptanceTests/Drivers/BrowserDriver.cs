@@ -1,5 +1,6 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Remote;
 
 namespace AcceptanceTests.Drivers;
 
@@ -19,8 +20,10 @@ public class BrowserDriver : IDisposable
     {
         var chromeDriverService = ChromeDriverService.CreateDefaultService();
         var chromeOptions = new ChromeOptions();
-        chromeOptions.AddArgument("headless");
-        var chromeDriver = new ChromeDriver(chromeDriverService, chromeOptions);
+//        chromeOptions.AddArgument("headless");
+        //var chromeDriver = new ChromeDriver(chromeDriverService, chromeOptions);
+        var seleniumUrl = Environment.GetEnvironmentVariable("SELENIUM_URL")!;
+        var chromeDriver = new RemoteWebDriver(new Uri(seleniumUrl), chromeOptions);
 
         return chromeDriver;
     }
