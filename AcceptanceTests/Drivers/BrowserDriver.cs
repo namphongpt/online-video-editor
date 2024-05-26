@@ -19,6 +19,7 @@ public class BrowserDriver : IDisposable
     {
         var chromeDriverService = ChromeDriverService.CreateDefaultService();
         var chromeOptions = new ChromeOptions();
+        chromeOptions.AddArgument("headless");
         var chromeDriver = new ChromeDriver(chromeDriverService, chromeOptions);
 
         return chromeDriver;
