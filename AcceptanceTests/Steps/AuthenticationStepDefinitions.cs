@@ -1,6 +1,6 @@
 using AcceptanceTests.Drivers;
 using AcceptanceTests.PageObjects;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace AcceptanceTests.Steps;
 

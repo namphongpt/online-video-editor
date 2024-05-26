@@ -1,7 +1,6 @@
-using BoDi;
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace AcceptanceTests.Hooks;
 
