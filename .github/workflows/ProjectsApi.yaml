@@ -20,7 +20,7 @@ jobs:
     - uses: actions/setup-dotnet@v4
     - run: dotnet format style ApiGateway/ApiGateway.csproj --verify-no-changes --verbosity diagnostic
 
-  test:
+  unit-test:
     needs: [ lint ]
     runs-on: ubuntu-latest
     steps:
@@ -29,8 +29,8 @@ jobs:
       - uses: actions/setup-dotnet@v4
       - run: dotnet test ApiGateway
 
-  release:
-    needs: [ test ]
+  release-staging:
+    needs: [ unit-test ]
     permissions:
       contents: read
       id-token: write
@@ -53,8 +53,54 @@ jobs:
           tags: ${{ env.AZURE_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           file: ProjectsApi/Dockerfile
 
-  deploy:
-     needs: [ release ]
+  deploy-staging:
+    needs: [ release-staging ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+      - name: Azure login
+        id: login
+        uses: azure/login@v1.4.3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: onlinevideoeditor
+          cluster-name: online-video-editor
+      - name: Bake Kustomize staging overlay
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: 'kustomize'
+          kustomizationPath: './k8s/overlays/staging'
+          kubectl-version: 'latest'
+      - name: Setup kubectl
+        id: install-kubectl
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: 'staging'
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: 'onlinevideoeditor.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}'
+          pull-images: false
+
+    # kubectl migrate
+
+  acceptance-tests:
+    needs: [ deploy-staging ] 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: action/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+      - run: dotnet test AcceptanceTests
+        env:
+          STAGING_BASE_URL: https://oveapp-staging.samvanhunsel.nl
+
+  deploy-production:
+     needs: [ acceptance-tests ]
      runs-on: ubuntu-latest
      steps:
       - name: Checkout source code
@@ -70,12 +116,17 @@ jobs:
         with:
           resource-group: onlinevideoeditor
           cluster-name: online-video-editor
+      - name: Bake Kustomize production overlay
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: 'kustomize'
+          kustomizationPath: './k8s/overlays/production'
+          kubectl-version: 'latest'
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/k8s-deploy@v4
         with:
           namespace: 'default'
-          manifests: |
-            k8s/projectsapi-deployment.yaml
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
           images: 'onlinevideoeditor.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}'
           pull-images: false
