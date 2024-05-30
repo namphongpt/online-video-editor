@@ -30,3 +30,17 @@ spec:
             name: frontend
             port:
               number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: ingress-staging
+spec:
+  controller: k8s.io/ingress-nginx
+---
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: public
+spec:
+  controller: k8s.io/ingress-nginx
