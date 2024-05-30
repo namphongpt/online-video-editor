@@ -2,7 +2,7 @@ using OpenQA.Selenium;
 
 namespace AcceptanceTests.PageObjects;
 
-public class AuthenticationPageObject(IWebDriver webDriver)
+public class AuthenticationPageObject(IWebDriver webDriver) : PageObject
 {
     private readonly IWebDriver _webDriver = webDriver;
     public const int DefaultWaitInSeconds = 5;
@@ -13,9 +13,9 @@ public class AuthenticationPageObject(IWebDriver webDriver)
 
     public void EnsurePageIsOpen()
     {
-        if (_webDriver.Url != "http://localhost/")
+        if (_webDriver.Url != baseUrl)
         {
-            _webDriver.Url = "http://localhost/";
+            _webDriver.Url = baseUrl;
         }
 
         // TODO: add a wait until

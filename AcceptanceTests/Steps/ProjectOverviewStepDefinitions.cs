@@ -52,7 +52,7 @@ public class ProjectOverviewStepDefinitions
     {
         _projectPageObject.WaitOnPageLoad();
 
-        Assert.StartsWith("http://localhost/project/", _webDriver.Url);
+        Assert.True(_projectPageObject.IsOnPage());
         Assert.Equal($"Project ‘{projectTitle}’", _projectPageObject.Title);
     }
 

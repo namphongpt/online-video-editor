@@ -11,7 +11,7 @@ namespace AcceptanceTests.PageObjects;
 /// </summary>
 /// <seealso href="https://docs.specflow.org/projects/specflow/en/latest/Guides/PageObjectModel.html"/>
 /// <param name="webDriver">The Selenium web driver instance</param>
-public class ProjectCreationModalPageObject(IWebDriver webDriver)
+public class ProjectCreationModalPageObject(IWebDriver webDriver) : PageObject
 {
     private readonly IWebDriver _webDriver = webDriver;
 
@@ -22,7 +22,7 @@ public class ProjectCreationModalPageObject(IWebDriver webDriver)
 
     public void OpenModal()
     {
-        Assert.Equal("http://localhost/", _webDriver.Url);
+        Assert.Equal(baseUrl + '/', _webDriver.Url);
         OpenModalButtonElement.Click();
     }
 

@@ -8,11 +8,16 @@ namespace AcceptanceTests.PageObjects;
 /// </summary>
 /// <seealso href="https://docs.specflow.org/projects/specflow/en/latest/Guides/PageObjectModel.html"/>
 /// <param name="webDriver">The Selenium web driver instance</param>
-public class ProjectPageObject(IWebDriver webDriver)
+public class ProjectPageObject(IWebDriver webDriver) : PageObject
 {
     private readonly IWebDriver _webDriver = webDriver;
 
     public string Title => _webDriver.FindElement(By.TagName("h1")).Text;
+
+    public bool IsOnPage()
+    {
+        return _webDriver.Url.StartsWith($"{baseUrl}/project/");
+    }
 
     public void WaitOnPageLoad()
     {
