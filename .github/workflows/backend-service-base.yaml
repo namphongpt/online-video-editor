@@ -11,18 +11,16 @@ on:
         description: 'Login server domain for the Azure Container Registry'
         required: true
         type: string
-      acr-username:
-        required: true
-        type: string
-      acr-password:
-        required: true
-        type: string
-      azure-credentials:
-        required: true
-        type: string
       image-name:
         required: true
         type: string
+    secrets:
+      ACR_USERNAME:
+        required: true
+      ACR_PASSWORD:
+        required: true
+      AZURE_CREDENTIALS:
+        required: true
     
 jobs:
   lint:
@@ -52,8 +50,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ inputs.azure-login-server }}
-          username: ${{ inputs.acr-username }}
-          password: ${{ inputs.acr-password }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push to ACR
         uses: docker/build-push-action@v2
@@ -73,7 +71,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1.4.3
         with:
-          creds: ${{ inputs.azure-credentials }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set AKS context
         uses: azure/aks-set-context@v3
@@ -119,7 +117,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1.4.3
         with:
-          creds: ${{ inputs.azure-credentials }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set AKS context
         uses: azure/aks-set-context@v3
