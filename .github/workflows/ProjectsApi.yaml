@@ -118,6 +118,7 @@ jobs:
           cluster-name: online-video-editor
       - name: Bake Kustomize production overlay
         uses: azure/k8s-bake@v3
+        id: bake
         with:
           renderEngine: 'kustomize'
           kustomizationPath: './k8s/overlays/production'
