@@ -6,6 +6,8 @@ on:
       - master
     paths:
       - ProjectsApi/**
+  workflow_dispatch:
+    # Allows for manual build trigger for workflow testing purposes
 
 env:
   AZURE_LOGIN_SERVER: onlinevideoeditor.azurecr.io
@@ -76,6 +78,7 @@ jobs:
           renderEngine: 'kustomize'
           kustomizationPath: './k8s/overlays/staging'
           kubectl-version: 'latest'
+        id: bake
       - name: Setup kubectl
         id: install-kubectl
         uses: azure/k8s-deploy@v4
