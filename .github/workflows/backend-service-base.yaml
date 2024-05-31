@@ -1,3 +1,5 @@
+name: General C# backend service pipeline
+
 on:
   workflow_call:
     inputs:
@@ -7,6 +9,15 @@ on:
         type: string
       azure-login-server:
         description: 'Login server domain for the Azure Container Registry'
+        required: true
+        type: string
+      acr-username:
+        required: true
+        type: string
+      acr-password:
+        required: true
+        type: string
+      azure-credentials:
         required: true
         type: string
       image-name:
@@ -41,8 +52,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ inputs.azure-login-server }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          username: ${{ inputs.acr-username }}
+          password: ${{ inputs.acr-password }}
 
       - name: Build and push to ACR
         uses: docker/build-push-action@v2
@@ -62,7 +73,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1.4.3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ inputs.azure-credentials }}
 
       - name: Set AKS context
         uses: azure/aks-set-context@v3
@@ -108,7 +119,7 @@ jobs:
       - name: Azure login
         uses: azure/login@v1.4.3
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          creds: ${{ inputs.azure-credentials }}
 
       - name: Set AKS context
         uses: azure/aks-set-context@v3

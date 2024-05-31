@@ -10,9 +10,12 @@ on:
     # Allows for manual build trigger for workflow testing purposes
 
 jobs:
-  call-regular-backend-service-jobs:
+  general-backend-service-pipeline:
     uses: ./.github/workflows/backend-service-base.yaml
     with:
       service-directory: 'ProjectsApi'
-      azure-login-server: onlinevideoeditor.azurecr.io
       image-name: projects_api
+      azure-login-server: onlinevideoeditor.azurecr.io
+      acr-username: ${{ secrets.ACR_USERNAME }}
+      acr-password: ${{ secrets.ACR_PASSWORD }}
+      azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
