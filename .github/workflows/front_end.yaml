@@ -6,6 +6,8 @@ on:
       - master
     paths:
       - front_end/**
+  workflow_dispatch:
+    # Allows for manual build trigger for workflow testing purposes
 
 env:
   AZURE_LOGIN_SERVER: onlinevideoeditor.azurecr.io
@@ -47,35 +49,74 @@ jobs:
           build-args:
             ENVIRONMENT=production
 
-
-  deploy:
+  deploy-staging:
      needs: [ release ]
      runs-on: ubuntu-latest
      steps:
-     # - name: Set k8s context
-     #   uses: azure/k8s-set-context@v2
-     #   with:
-     #     method: service-account
-     #     k8s-url: https://online-video-editor-dns-c1pmbjz1.hcp.eastus.azmk8s.io:443
-     #     k8s-secret: ${{ secrets.K8S_SECRET }}
       - name: Checkout source code
         uses: actions/checkout@v4
+
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Set AKS context
         id: set-context
         uses: azure/aks-set-context@v3
         with:
           resource-group: onlinevideoeditor
           cluster-name: online-video-editor
-      - name: Setup kubectl
+
+      - name: Bake Kustomize staging overlay
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: 'kustomize'
+          kustomizationPath: './k8s/overlays/staging'
+          kubectl-version: 'latest'
+        id: bake-staging
+
+      - name: Deploy staging on AKS
+        id: install-kubectl
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: 'staging'
+          manifests: ${{ steps.bake-staging.outputs.manifestsBundle }}
+          images: 'onlinevideoeditor.azurecr.io/${{ env.SERVICE_NAME }}-staging:${{ github.sha }}'
+
+  deploy-production:
+     needs: [ release ]
+     runs-on: ubuntu-latest
+     steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        id: login
+        uses: azure/login@v1.4.3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        id: set-context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: onlinevideoeditor
+          cluster-name: online-video-editor
+
+      - name: Bake Kustomize production overlay
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: 'kustomize'
+          kustomizationPath: './k8s/overlays/production'
+          kubectl-version: 'latest'
+        id: bake-production
+
+      - name: Deploy production on AKS
         id: install-kubectl
         uses: azure/k8s-deploy@v4
         with:
           namespace: 'default'
-          manifests: |
-            k8s/frontend-deployment.yaml
+          manifests: ${{ steps.bake-production.outputs.manifestsBundle }}
           images: 'onlinevideoeditor.azurecr.io/${{ env.SERVICE_NAME }}:${{ github.sha }}'

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: onlinevideoeditor.azurecr.io/front_end:a5e34521385d15d4a7d0796d4bfc4dc57fb0a3b8
+          image: onlinevideoeditor.azurecr.io/front_end:4eb63ef258e9745df999fd4938740fb72eeac28a
           ports:
           - containerPort: 80
 ---
