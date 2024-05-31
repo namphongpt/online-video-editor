@@ -16,4 +16,4 @@ jobs:
       service-directory: 'ProjectsApi'
       image-name: projects_api
       azure-login-server: onlinevideoeditor.azurecr.io
-      secrets: inherit
+    secrets: inherit
