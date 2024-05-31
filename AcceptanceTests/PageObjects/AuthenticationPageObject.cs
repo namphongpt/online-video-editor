@@ -18,7 +18,11 @@ public class AuthenticationPageObject(IWebDriver webDriver) : PageObject
             _webDriver.Url = baseUrl;
         }
 
-        // TODO: add a wait until
+        Utils.WaitUntil(
+            _webDriver,
+            () => _webDriver.FindElements(By.Id("username")),
+            result => result.Count == 1
+        );
     }
 
     public void EnterUsername(string username) => UsernameFieldElement.SendKeys(username);
