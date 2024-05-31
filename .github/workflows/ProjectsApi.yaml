@@ -16,7 +16,4 @@ jobs:
       service-directory: 'ProjectsApi'
       image-name: projects_api
       azure-login-server: onlinevideoeditor.azurecr.io
-      acr-username: ${{ secrets.ACR_USERNAME }}
-      acr-password: ${{ secrets.ACR_PASSWORD }}
-      azure-credentials: ${{ secrets.AZURE_CREDENTIALS }}
       secrets: inherit
