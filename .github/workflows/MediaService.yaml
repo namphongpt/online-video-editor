@@ -6,10 +6,12 @@ on:
       - master
     paths:
       - MediaService/**
+  workflow_dispatch:
+    # Allows for manual build trigger for workflow testing purposes
 
 env:
   AZURE_LOGIN_SERVER: onlinevideoeditor.azurecr.io
-  IMAGE_NAME: MediaService
+  IMAGE_NAME: media_service
 
 jobs:
   lint:

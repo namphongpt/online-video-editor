@@ -1,0 +1,133 @@
+on:
+  workflow_call:
+    inputs:
+      service-directory:
+        description: 'Directory name in which the service resides, should not begin with "./". This directory should contain a .csproj file and a Dockerfile'
+        required: true
+        type: string
+      azure-login-server:
+        description: 'Login server domain for the Azure Container Registry'
+        required: true
+        type: string
+      image-name:
+        required: true
+        type: string
+    
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+      - run: dotnet format style ${{ inputs.service-directory }} --verify-no-changes --verbosity diagnostic
+    
+  unit-test:
+    needs: [ lint ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+      - run: dotnet test ${{ inputs.service-directory }}
+
+  release:
+    needs: [ unit-test ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Docker login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ inputs.azure-login-server }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push to ACR
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: ./${{ inputs.service-directory }}
+          tags: ${{ inputs.azure-login-server }}/${{ inputs.image-name }}:${{ github.sha }}
+          file: ${{ inputs.service-directory }}/Dockerfile
+
+  deploy-staging:
+    needs: [ release ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v1.4.3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: onlinevideoeditor
+          cluster-name: online-video-editor
+      
+      - name: Bake Kustomize staging overlay
+        uses: azure/k8s-bake@v3
+        with:
+          renderEngine: 'kustomize'
+          kustomizationPath: './k8s/overlays/staging'
+          kubectl-version: 'latest'
+        id: bake
+
+      - name: Deploy staging to AKS
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: 'staging'
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: '${{ inputs.azure-login-server }}/${{ inputs.image-name }}:${{ github.sha }}'
+          pull-images: false
+
+  acceptance-tests:
+    needs: [ deploy-staging ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+      - run: dotnet test AcceptanceTests
+        env:
+          STAGING_BASE_URL: https://oveapp-staging.samvanhunsel.nl
+
+  deploy-production:
+    needs: [ acceptance-tests ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Azure login
+        uses: azure/login@v1.4.3
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: onlinevideoeditor
+          cluster-name: online-video-editor
+      
+      - name: Bake Kustomize production overlay
+        uses: azure/k8s-bake@v3
+        id: bake
+        with:
+          renderEngine: 'kustomize'
+          kustomizationPath: './k8s/overlays/production'
+          kubectl-version: 'latest'
+      
+      - name: Deploy production to AKS
+        uses: azure/k8s-deploy@v4
+        with:
+          namespace: 'default'
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: '${{ inputs.azure-login-server }}/${{ inputs.image-name }}:${{ github.sha }}'
+          pull-images: false
