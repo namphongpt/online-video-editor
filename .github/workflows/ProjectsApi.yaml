@@ -9,7 +9,7 @@ on:
 
 env:
   AZURE_LOGIN_SERVER: onlinevideoeditor.azurecr.io
-  IMAGE_NAME: ProjectsApi
+  IMAGE_NAME: projects_api
 
 jobs:
   lint:
