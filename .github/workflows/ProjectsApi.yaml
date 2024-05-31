@@ -95,7 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
-        uses: action/checkout@v4
+        uses: actions/checkout@v4
 
       - uses: actions/setup-dotnet@v4
       - run: dotnet test AcceptanceTests
