@@ -104,7 +104,7 @@ jobs:
       - name: Filter only this deployment
         uses: mikefarah/yq@master
         with:
-          cmd: echo "${{ steps.bake.outputs.manifestsBundle }}" | yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' -
+          cmd: echo "${{ steps.bake.outputs.manifestsBundle }}" | yq -oy 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' -
         id: bake-filtered
 
       - name: Deploy staging to AKS
