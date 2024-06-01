@@ -14,6 +14,8 @@ jobs:
     uses: ./.github/workflows/backend-service-base.yaml
     with:
       service-directory: 'MediaService'
+      csproj-path: MediaService/MediaService.csproj
       image-name: media_service
       azure-login-server: onlinevideoeditor.azurecr.io
+      deployment-name: media-service-api
     secrets: inherit

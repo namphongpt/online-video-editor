@@ -14,6 +14,8 @@ jobs:
     uses: ./.github/workflows/backend-service-base.yaml
     with:
       service-directory: 'ProjectsApi'
+      csproj-path: ProjectsApi.csproj
       image-name: projects_api
       azure-login-server: onlinevideoeditor.azurecr.io
+      deployment-name: projects-api
     secrets: inherit
