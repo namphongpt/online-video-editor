@@ -98,7 +98,7 @@ jobs:
 
       - name: Filter only this deployment
         run: |
-          apt-get install yq
+          sudo apt-get install -y yq
           echo "${{ steps.bake.outputs.manifestsBundle }}" | yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' - > deployment.yaml
         id: bake-filtered
 
