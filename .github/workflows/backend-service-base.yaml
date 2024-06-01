@@ -96,17 +96,22 @@ jobs:
           kubectl-version: 'latest'
         id: bake
 
+#      - run: |-
+#        cat <<<EOF
+#          echo "${{ steps.bake.outputs.manifestsBundle }}"
+#        EOF > manifests-bundle.yaml
+
       - name: Filter only this deployment
-        run: |
-          sudo apt-get install -y yq
-          echo "${{ steps.bake.outputs.manifestsBundle }}" | yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' - > deployment.yaml
+        uses: mikefarah/yq@master
+        with:
+          cmd: echo "${{ steps.bake.outputs.manifestsBundle }}" | yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' -
         id: bake-filtered
 
       - name: Deploy staging to AKS
         uses: azure/k8s-deploy@v4
         with:
           namespace: 'staging'
-          manifests: deployment.yaml #${{ steps.bake.outputs.manifestsBundle }}
+          manifests: ${{ steps.bake-filtered.outputs.result }}
           images: '${{ inputs.azure-login-server }}/${{ inputs.image-name }}:${{ github.sha }}'
           pull-images: false
 
