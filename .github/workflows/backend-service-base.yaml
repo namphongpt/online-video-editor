@@ -69,8 +69,6 @@ jobs:
             ${{ inputs.azure-login-server }}/${{ inputs.image-name }}:latest
             ${{ inputs.azure-login-server }}/${{ inputs.image-name }}:${{ github.sha }}
           file: ${{ inputs.service-directory }}/Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
   deploy-staging:
     needs: [ release ]
