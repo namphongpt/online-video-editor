@@ -96,15 +96,13 @@ jobs:
           kubectl-version: 'latest'
         id: bake
 
-#      - run: |-
-#        cat <<<EOF
-#          echo "${{ steps.bake.outputs.manifestsBundle }}"
-#        EOF > manifests-bundle.yaml
+      - run: |-
+          echo "${{ steps.bake.outputs.manifestsBundle }}" > manifests-bundle.yaml
 
       - name: Filter only this deployment
         uses: mikefarah/yq@master
         with:
-          cmd: echo "${{ steps.bake.outputs.manifestsBundle }}" | yq -oy 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' -
+          cmd: yq -oy 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' manifests-bundle.yaml
         id: bake-filtered
 
       - name: Deploy staging to AKS
