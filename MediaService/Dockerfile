@@ -11,15 +11,15 @@ ENV PATH $PATH:/root/.dotnet/tools
 RUN dotnet tool install --global dotnet-ef
 
 COPY ./MediaService/MediaService.csproj .
-RUN dotnet restore ./MediaService/MediaService.csproj
+RUN dotnet restore ./MediaService.csproj
 
-COPY . .
+COPY ./MediaService .
 RUN dotnet ef migrations bundle -o /app/efbundle
-RUN dotnet build ./MediaService/MediaService.csproj -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build ./MediaService.csproj -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish ./MediaService/MediaService.csproj -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish ./MediaService.csproj -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
