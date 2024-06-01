@@ -100,16 +100,16 @@ jobs:
           echo "${{ steps.bake.outputs.manifestsBundle }}" > manifests-bundle.yaml
 
       - name: Filter only this deployment
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq -oy 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' manifests-bundle.yaml
+        run: |-
+          sudo pip install yq
+          yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' manifests-bundle.yaml > single.yaml
         id: bake-filtered
 
       - name: Deploy staging to AKS
         uses: azure/k8s-deploy@v4
         with:
           namespace: 'staging'
-          manifests: ${{ steps.bake-filtered.outputs.result }}
+          manifests: single.yaml # ${{ steps.bake-filtered.outputs.result }}
           images: '${{ inputs.azure-login-server }}/${{ inputs.image-name }}:${{ github.sha }}'
           pull-images: false
 
