@@ -1,7 +1,8 @@
+using System.Text.Json;
+
 using AutoMapper;
 
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json;
 
 using ProjectsApi.Dto;
 using ProjectsApi.Models;
