@@ -102,8 +102,11 @@ jobs:
       - name: Filter only this deployment
         run: |-
           sudo pip install yq
+          cat manifests-bundle.yaml
           yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' manifests-bundle.yaml > single.yaml
+          cat single.yaml
         id: bake-filtered
+        # https://github.com/esvanha/online-video-editor/actions/runs/9333901809/job/25691442938
 
       - name: Deploy staging to AKS
         uses: azure/k8s-deploy@v4
