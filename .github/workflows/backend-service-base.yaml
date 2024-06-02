@@ -102,16 +102,8 @@ jobs:
       - name: Filter only this deployment
         run: |-
           pip install yq
-          echo --
-          ls
-          echo --
-          cat manifests-bundle.yaml
-          echo --
           yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' "${{ steps.bake.outputs.manifestsBundle }}" > single.yaml
-          echo --
-          cat single.yaml
         id: bake-filtered
-        # https://github.com/esvanha/online-video-editor/actions/runs/9333901809/job/25691442938
 
       - name: Deploy staging to AKS
         uses: azure/k8s-deploy@v4
@@ -158,11 +150,17 @@ jobs:
           renderEngine: 'kustomize'
           kustomizationPath: './k8s/overlays/production'
           kubectl-version: 'latest'
+
+      - name: Filter only this deployment
+        run: |-
+          pip install yq
+          yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' "${{ steps.bake.outputs.manifestsBundle }}" > single.yaml
+        id: bake-filtered
       
       - name: Deploy production to AKS
         uses: azure/k8s-deploy@v4
         with:
           namespace: 'default'
-          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          manifests: single.yaml
           images: '${{ inputs.azure-login-server }}/${{ inputs.image-name }}:${{ github.sha }}'
           pull-images: false
