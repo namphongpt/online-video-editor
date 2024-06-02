@@ -34,7 +34,9 @@ jobs:
         with:
           push: true
           context: ./${{ env.SERVICE_NAME }}
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}-staging:${{ github.sha }}
+          tags: |-
+            ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}-staging:latest
+            ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}-staging:${{ github.sha }}
           file: ${{ env.SERVICE_NAME }}/Dockerfile
           build-args:
             ENVIRONMENT=staging
@@ -44,7 +46,9 @@ jobs:
         with:
           push: true
           context: ./${{ env.SERVICE_NAME }}
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          tags: |-
+            ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:latest
+            ${{ env.AZURE_LOGIN_SERVER }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
           file: ${{ env.SERVICE_NAME }}/Dockerfile
           build-args:
             ENVIRONMENT=production
@@ -77,12 +81,18 @@ jobs:
           kubectl-version: 'latest'
         id: bake-staging
 
+      - name: Filter only this deployment
+        run: |-
+          pip install yq
+          yq -y 'select(.kind == "Deployment" and .metadata.name == "frontend")' "${{ steps.bake-staging.outputs.manifestsBundle }}" > single.yaml
+        id: bake-filtered
+
       - name: Deploy staging on AKS
         id: install-kubectl
         uses: azure/k8s-deploy@v4
         with:
           namespace: 'staging'
-          manifests: ${{ steps.bake-staging.outputs.manifestsBundle }}
+          manifests: single.yaml
           images: 'onlinevideoeditor.azurecr.io/${{ env.SERVICE_NAME }}-staging:${{ github.sha }}'
 
   deploy-production:
@@ -113,10 +123,16 @@ jobs:
           kubectl-version: 'latest'
         id: bake-production
 
+      - name: Filter only this deployment
+        run: |-
+          pip install yq
+          yq -y 'select(.kind == "Deployment" and .metadata.name == "frontend")' "${{ steps.bake-production.outputs.manifestsBundle }}" > single.yaml
+        id: bake-filtered
+
       - name: Deploy production on AKS
         id: install-kubectl
         uses: azure/k8s-deploy@v4
         with:
           namespace: 'default'
-          manifests: ${{ steps.bake-production.outputs.manifestsBundle }}
+          manifests: single.yaml
           images: 'onlinevideoeditor.azurecr.io/${{ env.SERVICE_NAME }}:${{ github.sha }}'

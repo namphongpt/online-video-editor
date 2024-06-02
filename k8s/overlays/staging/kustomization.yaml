@@ -31,7 +31,7 @@ patches:
     patch: |-
       - op: replace
         path: /spec/template/spec/containers/0/image
-        value: onlinevideoeditor.azurecr.io/front_end-staging:4eb63ef258e9745df999fd4938740fb72eeac28a
+        value: onlinevideoeditor.azurecr.io/front_end-staging:latest
 
   - target:
       kind: ClusterIssuer
