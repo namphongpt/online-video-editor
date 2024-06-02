@@ -107,7 +107,7 @@ jobs:
           echo --
           cat manifests-bundle.yaml
           echo --
-          yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' manifests-bundle.yaml > single.yaml
+          yq -y 'select(.kind == "Deployment" and .metadata.name == "${{ inputs.deployment-name }}")' "${{ steps.bake.outputs.manifestsBundle }}" > single.yaml
           echo --
           cat single.yaml
         id: bake-filtered
