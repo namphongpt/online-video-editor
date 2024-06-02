@@ -1,6 +1,7 @@
 using AutoMapper;
 
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 using ProjectsApi.Dto;
 using ProjectsApi.Models;
@@ -21,10 +22,17 @@ public class ProjectService : IProjectService
         _mapper = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<ProjectCreateDto, Project>()
-                .ForMember(
+               .ForMember(
                     dest => dest.CreatedBy,
                     opt => opt.MapFrom((_, _, _, context) => context.Items["UserId"])
-                );
+               );
+            cfg.CreateMap<Clip, ClipRenderDto>().ReverseMap();
+            cfg.CreateMap<Project, ProjectRenderDto>()
+               .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.Id))
+               .ForMember(
+                    dest => dest.Clips,
+                    opt => opt.MapFrom((_, _, _, context) => context.Items["Clips"])
+               );
         }).CreateMapper();
     }
 
@@ -55,9 +63,16 @@ public class ProjectService : IProjectService
 
     public async Task RequestRender(Project project)
     {
+        var clips = await _context.Clips.Where(c => c.Project == project)
+                                        .ToListAsync();
+        var projectRenderBody = _mapper.Map<ProjectRenderDto>(
+            project,
+            opt => opt.Items["Clips"] = clips
+        );
+
         await _messageService.SendMessageAsync(
             "video-render-queue",
-            project.Id.ToString()
+            JsonSerializer.Serialize(projectRenderBody)
         );
     }
 }

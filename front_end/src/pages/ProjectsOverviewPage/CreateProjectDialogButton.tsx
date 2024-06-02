@@ -1,14 +1,11 @@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
-import { QUERY_PROJECTS_KEY } from "@/constants/query.constant";
 import { useAddProject } from "@/queries/projects.query";
-import queryClient from "@/queries/queryClient";
 import { CreateProjectParam } from "@/repositories/projects/projectRepository.param";
-import { useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, PlusCircle } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";

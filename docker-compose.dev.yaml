@@ -16,3 +16,9 @@ services:
       watch:
         - path: ./ApiGateway
           action: rebuild
+
+  video-render-worker:
+    develop:
+      watch:
+        - path: ./VideoRenderWorker
+          action: rebuild

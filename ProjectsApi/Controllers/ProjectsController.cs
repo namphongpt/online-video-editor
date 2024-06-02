@@ -84,10 +84,20 @@ public class ProjectsController : ControllerBase
     [HttpPost("{id}/render")]
     public async Task<ActionResult> RenderProject(Guid id)
     {
+        string? userId = User.GetUserId();
+        if (userId is null)
+        {
+            return Unauthorized();
+        }
+
         Project? project = await _projectService.GetProjectAsync(id);
         if (project is null)
         {
             return NotFound();
+        }
+        if (project.CreatedBy != userId)
+        {
+            return Forbid();
         }
 
         await _projectService.RequestRender(project);

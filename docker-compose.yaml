@@ -35,7 +35,7 @@ services:
 
   media-service:
     build:
-      context: ./MediaService/MediaService
+      context: ./MediaService
       args:
         - BUILD_CONFIGURATION=Debug
       target: build
@@ -79,7 +79,7 @@ services:
     ports:
       - 8080:8080
 
-  dev_gateway:
+  dev-gateway:
     build:
       context: ./dev_gateway
     container_name: gateway
@@ -89,3 +89,11 @@ services:
       - projects-api
     ports:
       - 80:80
+
+  video-render-worker:
+    build:
+      context: ./VideoRenderWorker
+    container_name: video-render-worker
+    restart: always
+    environment:
+      AZURE_SERVICE_BUS_CONN_STR: Endpoint=sb://onlinevideoeditor-dev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=E73LCgSPtDMXIDzhuUNI3dQQxof2bq4FD+ASbEOLImY=

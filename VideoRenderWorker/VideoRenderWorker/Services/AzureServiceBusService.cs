@@ -1,6 +1,6 @@
 using Azure.Messaging.ServiceBus;
 
-namespace ProjectsApi.Services;
+namespace VideoRenderWorker.Services;
 
 public class AzureServiceBusService : IMessageService
 {

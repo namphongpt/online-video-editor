@@ -14,6 +14,7 @@ import { ClipCreateDto } from '@/interfaces/clip';
 import MediaAssetUploadForm from './ProjectsOverviewPage/MediaAssetUploadForm';
 import { useGetMediaAssetsQuery } from '@/queries/media-assets.query';
 import { withAuthenticationRequired } from '@auth0/auth0-react';
+import RenderButton from './ProjectPage/RenderButton';
 
 export type DragState = false | 'outside' | 'inside';
 
@@ -156,6 +157,8 @@ const ProjectPage = (): JSX.Element => {
                     }
                 </VideoTimeline>
             </DndContext>
+
+            <RenderButton project={project} />
         </Layout>
     )
 };

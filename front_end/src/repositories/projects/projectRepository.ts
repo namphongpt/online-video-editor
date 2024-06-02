@@ -1,5 +1,5 @@
 import { ProjectInterface } from '@/interfaces/project'
-import { CreateProjectParam } from './projectRepository.param'
+import { CreateProjectParam, RenderProjectParam } from './projectRepository.param'
 import { Auth0ContextInterface } from '@auth0/auth0-react'
 import createAuthenticatedClient from '../apiClient'
 
@@ -27,4 +27,10 @@ export const createProject = async ({ title }: CreateProjectParam, auth: Auth0Co
     const response = await client.post<ProjectInterface>('/api/Projects', { title });
 
     return response.data;
+};
+
+export const renderProject = async ({ id }: RenderProjectParam, auth: Auth0ContextInterface): Promise<void> => {
+    const client = await createAuthenticatedClient(auth);
+
+    await client.post(`/api/Projects/${id}/Render`);
 };
