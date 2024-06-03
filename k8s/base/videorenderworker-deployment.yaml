@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-render-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-render-worker
+  template:
+    metadata:
+      labels:
+        app: video-render-worker
+    spec:
+      containers:
+        - name: video-render-worker
+          image: onlinevideoeditor.azurecr.io/video_render_worker:latest
+          env:
+            - name: AZURE_SERVICE_BUS_CONN_STR
+              valueFrom:
+                secretKeyRef:
+                  name: service-bus-credentials
+                  key: connection_string
+            - name: AZURE_STORAGE_CONN_STR
+              valueFrom:
+                secretKeyRef:
+                  name: blob-storage-credentials
+                  key: connection_string

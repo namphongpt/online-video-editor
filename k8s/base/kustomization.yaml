@@ -5,3 +5,4 @@ resources:
   - mediaservice-deployment.yaml
   - projectsapi-deployment.yaml
   - ingress.yaml
+  - videorenderworker-deployment.yaml

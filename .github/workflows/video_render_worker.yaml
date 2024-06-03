@@ -1,36 +1,21 @@
-name: Service video_render_worker
+name: Service VideoRenderWorker
 
 on:
   push:
     branches:
       - master
     paths:
-      - video_render_worker/**
-
-env:
-  AZURE_LOGIN_SERVER: onlinevideoeditor.azurecr.io
-  SERVICE_NAME: video_render_worker
+      - VideoRenderWorker/**
+  workflow_dispatch:
+    # Allows for manual build trigger for workflow testing purposes
 
 jobs:
-  release:
-    permissions:
-      contents: read
-      id-token: write
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Docker login to ACR
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ env.AZURE_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
-
-      - name: Build and push to ACR
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          context: ./${{ env.SERVICE_NAME }}
-          tags: ${{ env.AZURE_LOGIN_SERVER }}/onlinevideoeditor:${{ env.SERVICE_NAME }}-${{ github.sha }}
-          file: ${{ env.SERVICE_NAME }}/Dockerfile
+  general-backend-service-pipeline:
+    uses: ./.github/workflows/backend-service-base.yaml
+    with:
+      service-directory: VideoRenderWorker
+      csproj-path: VideoRenderWorker/VideoRenderWorker.csproj
+      image-name: video_render_worker
+      azure-login-server: onlinevideoeditor.azurecr.io
+      deployment-name: video-render-worker
+    secrets: inherit
